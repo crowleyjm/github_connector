@@ -2,7 +2,7 @@ GitHub Connector
 
 # **GitHub Connector**
 
-GitHub Connector is a social media application that allows people with similar experience together, people who use similar tech stacksare suggested as connections to each other. It allows users to:
+GitHub Connector is a social media application that allows people with similar experience to connect with each other, people who use similar tech stacksare suggested as connections to each other. It allows users to:
 
   - Create a GitHub Connector User Acccount
   - Attach a valid GitHub account
