@@ -19,7 +19,7 @@ The backend works with different API calls to make requests to the Postgres data
 
 The backend allows for different API calls to make requests to the database as well as the GitHub API. This will be hosted on Heroku. This will be a three-tiered architecture shown below.
 
-![Image of Structure](./361 Structure.png)
+![Image of Structure](/361 Structure.png)
 
 
 
