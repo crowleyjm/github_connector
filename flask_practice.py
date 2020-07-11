@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 from flask import Flask, request, render_template, redirect
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import exc
 
+=======
+from flask import Flask, request, render_template
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
+# Previous imports remain...
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+import sys
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/users"
@@ -21,15 +30,24 @@ class RegistrationForm(Form):
     # accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
 class LoginForm(Form):
+<<<<<<< HEAD
     username = StringField('Username', [validators.Length(min=4, max=20)])
     password = PasswordField('Password', [validators.DataRequired()])
+=======
+    username = StringField('Username')
+    password = PasswordField('Password')
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
 
 class UserModel(db.Model):
     __tablename__ = 'users'
 
     # id = db.Column(db.Integer, primary_key=True)
+<<<<<<< HEAD
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(), unique = True)
+=======
+    username = db.Column(db.String(), primary_key=True)
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
     password = db.Column(db.String())
 
 
@@ -42,6 +60,7 @@ class UserModel(db.Model):
 
 
 
+<<<<<<< HEAD
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
@@ -64,12 +83,23 @@ def login():
         # db_session.add(user)
         flash('Welcome back')
     return render_template('login.html', form=form)
+=======
+
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+<<<<<<< HEAD
+=======
+# @app.route('/', methods=['POST'])
+# def my_form_post():
+#     text = request.form['uname']
+#     processed_text = text.upper()
+#     return processed_text
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -85,7 +115,36 @@ def register():
 
 
 
+<<<<<<< HEAD
 
+=======
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        # user = UserModel(form.username.data, form.password.data)
+        # return request
+        # print(request.form.getlist('username'))
+        # uname = request.form.getlist('username')
+        # print(uname[0])
+
+        # print('Hello world!', file=sys.stderr)
+        if request:
+            uname = request.form.getlist('username')[0]
+            pword = request.form.getlist('password')[0]
+            # data = request.form.getlist
+            new_user = UserModel(username=uname, password=pword)
+            db.session.add(new_user)
+            db.session.commit()
+            return {"message": f"User {new_user.username} has been created successfully."}
+        else:
+            return {"error": "The request payload is not in JSON format"}
+
+        # db_session.add(user)
+        flash('Welcome back')
+        return redirect(url_for('/'))
+    return render_template('login.html', form=form)
+>>>>>>> c9eec508c849563e29ab64a7fa74de848a874404
 #
 # @app.route('/cars', methods=['POST', 'GET'])
 # def handle_cars():

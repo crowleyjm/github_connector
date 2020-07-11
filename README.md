@@ -21,6 +21,12 @@ The backend allows for different API calls to make requests to the database as w
 
 ![Image of Structure](./images/361Struct.png)
 
+  ## **Database Schema**
+![Image of Database](./images/Schema361.png)
+
+  
+
+
 
 
 

@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% block header %}
+    <title>Welcome to GitHub Connector (Template)</title>
+{% endblock %}
+
+{% block content %}
+
+  <div class="dark-back">
+    <div class="container">
+      <h4 id="welcome_status">Welcome</h4>
+      <p class="welcome-text">Use the login link below to login or signup below.</p>
+    </div>
+  </div>
+
+<div class="container">
+    <form action="/userLogin" method="get">
+        <button type="Submit" class="btn btn-primary btn-lg">Login</button>
+    </form>
+</div>
+
+{% endblock %}
