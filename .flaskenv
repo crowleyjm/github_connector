@@ -1,2 +1,2 @@
-FLASK_APP=github_connector.py
+FLASK_APP=main.py
 FLASK_ENV=DEV
