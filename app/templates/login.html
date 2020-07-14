@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <br>
 <div class="card p-3 mb-2 bg-light text-dark" style="width: 40rem;">
   <div class="card-body">
@@ -12,7 +11,7 @@
 	<h6 class="card-subtitle mb-2 text-muted">Otherwise, follow the link to register an account.</h6>
 	<br>
 	
-        <h4>Sign In</h4>
+        <h4>Log In</h4>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -32,7 +31,6 @@
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
-	<br>
 	<br>
     <a href="{{ url_for('register') }}" class="card-link">Register</a>
     <a href="{{ url_for('help_page') }}" class="card-link">Help</a>
