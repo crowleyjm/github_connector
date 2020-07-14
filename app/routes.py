@@ -7,11 +7,6 @@ from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
 
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
 @app.route('/logout')
 def logout():
     logout_user()
@@ -90,3 +85,8 @@ def home():
 @app.route('/help')
 def help_page():
     return render_template('help.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
