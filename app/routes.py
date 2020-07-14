@@ -2,13 +2,14 @@ from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -20,9 +21,14 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+
+        user = User.query.filter_by(username=form.username.data).first()
+        if user.check_password(form.password.data):
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -34,11 +40,17 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return render_template('login.html', form=form)
-
         login_user(user, remember=form.remember_me.data)
         return render_template('welcome.html')
     return render_template('login.html', title='Sign In', form=form)
 
+
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
+    return render_template('unrecognized_user.html')
+
+
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def home():
     return render_template('welcome.html')
