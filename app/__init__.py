@@ -7,6 +7,9 @@ from flask_login import LoginManager
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/users"
+from app.api import bp as api_bp
+app.register_blueprint(api_bp, url_prefix='/api')
+
 app.config.from_object(Config)
 login = LoginManager(app)
 db = SQLAlchemy(app)

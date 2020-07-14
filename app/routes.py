@@ -4,6 +4,7 @@ from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from flask_login import current_user, login_user, logout_user
 
+
 @app.route('/logout')
 def logout():
     logout_user()

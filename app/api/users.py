@@ -3,14 +3,12 @@ from flask import Flask, request, make_response
 import json
 from app.api import bp
 
-
-
 @bp.route('/<git_name>')
 def user_get_lang(git_name):
     github_url = 'https://api.github.com/users/' + git_name + '/repos'
     payload = {}
     headers = {
-        # 'Authorization': 'Bearer Enter Token Here'
+        'Authorization': 'Bearer ceed3b90b3349a9243a0175496633918a8aa52a0'
     }
 
     response = requests.request("GET", github_url, headers=headers, data=payload)
