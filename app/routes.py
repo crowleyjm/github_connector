@@ -3,6 +3,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_dance.contrib.github import make_github_blueprint, github
 
 
 @app.route('/logout')
@@ -36,7 +37,7 @@ def register():
 def login():
 
     if current_user.is_authenticated:
-        return render_template('welcome.html')
+        return redirect(url_for('github.login'))
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -47,9 +48,32 @@ def login():
             return redirect(url_for('login'))
 
         login_user(user, remember=form.remember_me.data)
-        return render_template('welcome.html')
+        return redirect(url_for('github.login'))
 
     return render_template('login.html', title='Sign In', form=form)
+
+
+github_blueprint = make_github_blueprint(client_id='863e1284b52035734311',
+                                         client_secret='9f23aa1f7ff8831063365c6e0d06b54e7bab9675')
+
+app.register_blueprint(github_blueprint, url_prefix='/github_login')
+
+
+@app.route('/github', methods=['GET', 'POST'])
+def github_login():
+    if not github.authorized:
+        return redirect(url_for('github.login'))
+
+    account_info = github.get('/user')
+
+    if account_info.ok:
+        account_info_json = account_info.json()
+        user = User.query.filter_by(username=current_user).first()
+        user.authentication = True
+        db.session.commit()
+        return render_template('welcome.html')
+
+    return '<h1>Request failed!</h1>'
 
 
 @app.route('/', methods=['GET', 'POST'])
