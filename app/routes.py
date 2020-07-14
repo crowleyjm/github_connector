@@ -77,4 +77,6 @@ def github_login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    return render_template('welcome.html', github_account=github.get('/user/login'))
+    account_info = github.get('/user')
+    account_info_json = account_info.json()
+    return render_template('welcome.html', github_account=account_info_json['login'])
