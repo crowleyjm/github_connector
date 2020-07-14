@@ -3,7 +3,8 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
-from flask_dance.contrib.github import make_github_blueprint, github
+from app.api import bp, github_blueprint
+from flask_dance.contrib.github import github
 
 
 @app.route('/logout')
@@ -53,9 +54,6 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 
-github_blueprint = make_github_blueprint(client_id='863e1284b52035734311',
-                                         client_secret='9f23aa1f7ff8831063365c6e0d06b54e7bab9675')
-
 app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 
@@ -71,7 +69,7 @@ def github_login():
         user = User.query.filter_by(username=current_user).first()
         user.authentication = True
         db.session.commit()
-        return render_template('welcome.html')
+        return render_template('welcome.html', github_account=account_info_json(['login']))
 
     return '<h1>Request failed!</h1>'
 
