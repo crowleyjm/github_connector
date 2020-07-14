@@ -69,7 +69,7 @@ def github_login():
         user = User.query.filter_by(username=current_user.name).first()
         user.authentication = True
         db.session.commit()
-        return render_template('welcome.html', github_account='test')
+        return render_template('welcome.html')
 
     return '<h1>Request failed!</h1>'
 
@@ -77,4 +77,4 @@ def github_login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    return render_template('welcome.html', github_account='test')
+    return render_template('welcome.html', github_account=github.get('/user/login'))
