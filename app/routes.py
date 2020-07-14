@@ -66,8 +66,7 @@ def github_login(github_account=None):
 
     if account_info.ok:
         account_info_json = account_info.json()
-        user = User.query.filter_by(username=current_user).first()
-        print(current_user)
+        user = User.query.filter_by(username=current_user.name).first()
         user.authentication = True
         db.session.commit()
         return render_template('welcome.html', github_account=account_info_json(['login']))
