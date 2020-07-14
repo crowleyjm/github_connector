@@ -80,3 +80,8 @@ def home():
     account_info_json = account_info.json()
 
     return render_template('welcome.html', github_account=account_info_json['login'])
+
+
+@app.route('/help')
+def help_page():
+    return render_template('help.html')

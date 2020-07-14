@@ -2,17 +2,17 @@
 
 {% block content %}
 
+<br>
+<div class="card p-3 mb-2 bg-light text-dark" style="width: 40rem;">
+  <div class="card-body">
+    <h1 class="card-title">Welcome to Github Connector!</h1>
+	<br>
+    <h6 class="card-subtitle mb-2 text-muted">If you already have an account, you may sign in below.</h6>
 
-  <div class="dark-back">
-    <div class="container">
-      <h4 id="welcome_status">Welcome to Github Connector</h4>
-      <p class="welcome-text">If you already have an account, you may log in below. Otherwise, register an account.</p>
-    </div>
-  </div>
-
-
-
-    <h1>Sign In</h1>
+	<h6 class="card-subtitle mb-2 text-muted">Otherwise, follow the link to register an account.</h6>
+	<br>
+        <h4>Sign In</h4>
+		<br>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -32,4 +32,11 @@
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
+	<br>
+	<br>
+    <a href="{{ url_for('register') }}" class="card-link">Register</a>
+    <a href="help.html" class="card-link">Help</a>
+  </div>
+</div>
+
 {% endblock %}
