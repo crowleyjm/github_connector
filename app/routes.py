@@ -65,7 +65,7 @@ def github_login():
     account_info = github.get('/user')
 
     if account_info.ok:
-        db.session.query(User).filter_by(id=current_user).update({"authentication": True})
+        db.session.query(User).filter(id == current_user).update({"authentication": True})
         db.session.commit()
         return redirect(url_for('home'))
 
