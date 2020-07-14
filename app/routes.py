@@ -10,14 +10,14 @@ from flask_dance.contrib.github import github
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('/login'))
     
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('github.login'))
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -29,7 +29,7 @@ def register():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user.check_password(form.password.data):
-            return redirect(url_for('home'))
+            return redirect(url_for('github.login'))
 
     return render_template('register.html', title='Register', form=form)
 
@@ -78,4 +78,5 @@ def home():
     db.session.commit()
     account_info = github.get('/user')
     account_info_json = account_info.json()
+
     return render_template('welcome.html', github_account=account_info_json['login'])
