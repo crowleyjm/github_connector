@@ -58,18 +58,18 @@ app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 
 @app.route('/github', methods=['GET', 'POST'])
-def github_login(github_account=None):
+def github_login():
     if not github.authorized:
         return redirect(url_for('github.login'))
 
     account_info = github.get('/user')
 
     if account_info.ok:
-        account_info_json = account_info.json()
+        github_account = account_info.json()
         user = User.query.filter_by(username=current_user.name).first()
         user.authentication = True
         db.session.commit()
-        return render_template('welcome.html', github_account="test")
+        return render_template('welcome.html', github_account='test')
 
     return '<h1>Request failed!</h1>'
 
