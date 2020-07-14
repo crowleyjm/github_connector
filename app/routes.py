@@ -8,7 +8,7 @@ from flask_dance.contrib.github import github
 
 
 @app.route('/about')
-def help_page():
+def about():
     return render_template('about.html')
 
 
