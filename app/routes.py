@@ -65,9 +65,6 @@ def github_login():
     account_info = github.get('/user')
 
     if account_info.ok:
-        current = User.query.get(1)
-        current.authentication = 'true'
-        db.session.commit()
         return redirect(url_for('home'))
 
     return '<h1>Request failed!</h1>'
@@ -76,6 +73,9 @@ def github_login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    current = User.query.get(1)
+    current.authentication = 'true'
+    db.session.commit()
     account_info = github.get('/user')
     account_info_json = account_info.json()
     return render_template('welcome.html', github_account=account_info_json['login'])
