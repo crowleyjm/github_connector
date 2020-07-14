@@ -1,6 +1,4 @@
 <!doctype html>
-{% from "_formhelper.html" import render_field with context%}
-
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -23,10 +21,28 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">About</a>
             </li>
+            <li>
+              {% if current_user.is_anonymous %}
+              <a href="{{ url_for('login') }}">Login</a>
+              {% else %}
+              <a href="{{ url_for('logout') }}">Logout</a>
+              {% endif %}
+            </li>
             </ul>
         </div>
+        <hr>
+
     </nav>
     <div class="container">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
         {% block content %} {% endblock %}
     </div>
 
