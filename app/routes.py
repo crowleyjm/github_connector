@@ -5,7 +5,6 @@ from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
-from sqlalchemy.orm import sessionmaker
 
 
 @app.route('/logout')
@@ -66,9 +65,7 @@ def github_login():
     account_info = github.get('/user')
 
     if account_info.ok:
-        Session = sessionmaker()
-        session = Session()
-        x = session.query(User).filter_by(id=current_user).update({"authentication": True})
+        db.session.query(User).filter_by(id=current_user).update({"authentication": True})
         db.session.commit()
         return redirect(url_for('home'))
 
