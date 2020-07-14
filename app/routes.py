@@ -10,7 +10,7 @@ from flask_dance.contrib.github import github
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('/login'))
+    return redirect(url_for('login'))
     
 
 @app.route('/register', methods=['GET', 'POST'])
