@@ -58,7 +58,7 @@ app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 
 @app.route('/github', methods=['GET', 'POST'])
-def github_login():
+def github_login(github_account=None):
     if not github.authorized:
         return redirect(url_for('github.login'))
 
