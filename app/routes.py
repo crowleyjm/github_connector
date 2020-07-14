@@ -69,7 +69,7 @@ def github_login(github_account=None):
         user = User.query.filter_by(username=current_user.name).first()
         user.authentication = True
         db.session.commit()
-        return render_template('welcome.html', github_account=account_info_json)
+        return render_template('welcome.html', github_account="test")
 
     return '<h1>Request failed!</h1>'
 
