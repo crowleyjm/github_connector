@@ -73,7 +73,7 @@ def github_login():
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    current = User.query.get(1)
+    current = User.query.get(current_user.id)
     current.authentication = True
     db.session.commit()
     account_info = github.get('/user')
