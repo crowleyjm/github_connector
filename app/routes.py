@@ -67,6 +67,7 @@ def github_login():
     if account_info.ok:
         current = User.query.filter_by(username=current_user.name).first()
         current.authentication = True
+        db.session.add(current)
         db.session.commit()
         return redirect(url_for('home'))
 
