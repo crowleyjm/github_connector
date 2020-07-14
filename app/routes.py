@@ -49,7 +49,7 @@ def login():
             return redirect(url_for('login'))
 
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('github.login'))
+        return redirect(url_for('home'))
 
     return render_template('login.html', title='Sign In', form=form)
 
