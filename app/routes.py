@@ -74,7 +74,7 @@ def github_login():
 @login_required
 def home():
     current = User.query.get(1)
-    current.authentication = 'true'
+    current.authentication = True
     db.session.commit()
     account_info = github.get('/user')
     account_info_json = account_info.json()
