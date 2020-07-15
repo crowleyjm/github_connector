@@ -2,6 +2,8 @@ GitHub Connector
 
 # **GitHub Connector**
 
+URL: https://github-connector-361.herokuapp.com/
+
 GitHub Connector is a social media application that allows people with similar experience to connect with each other, people who use similar tech stacksare suggested as connections to each other. It allows users to:
 
   - Create a GitHub Connector User Acccount
