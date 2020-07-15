@@ -3,19 +3,21 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
+from app.api import bp, github_blueprint
+from flask_dance.contrib.github import github
 
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
     
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('github.login'))
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -27,7 +29,7 @@ def register():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user.check_password(form.password.data):
-            return redirect(url_for('home'))
+            return redirect(url_for('github.login'))
 
     return render_template('register.html', title='Register', form=form)
 
@@ -36,7 +38,7 @@ def register():
 def login():
 
     if current_user.is_authenticated:
-        return render_template('welcome.html')
+        return redirect(url_for('github.login'))
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -47,12 +49,44 @@ def login():
             return redirect(url_for('login'))
 
         login_user(user, remember=form.remember_me.data)
-        return render_template('welcome.html')
+        return redirect(url_for('home'))
 
     return render_template('login.html', title='Sign In', form=form)
+
+
+app.register_blueprint(github_blueprint, url_prefix='/github_login')
+
+
+@app.route('/github', methods=['GET', 'POST'])
+def github_login():
+    if not github.authorized:
+        return redirect(url_for('github.login'))
+
+    account_info = github.get('/user')
+
+    if account_info.ok:
+        return redirect(url_for('home'))
+
+    return '<h1>Request failed!</h1>'
 
 
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    return render_template('welcome.html')
+    current = User.query.get(current_user.id)
+    current.authentication = True
+    db.session.commit()
+    account_info = github.get('/user')
+    account_info_json = account_info.json()
+
+    return render_template('welcome.html', github_account=account_info_json['login'])
+
+
+@app.route('/help')
+def help_page():
+    return render_template('help.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')

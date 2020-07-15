@@ -1,39 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br>
+<div class="card p-3 mb-2 bg-light text-dark" style="width: 40rem;">
+  <div class="card-body">
+    <h1 class="card-title">Welcome to Github Connector!</h1>
+	<br>
+    <h6 class="card-subtitle mb-2 text-muted">If you already have an account, you may log in below.</h6>
 
-<!-- Custom styles for this template -->
-<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
-
-<div class="container text-center" >
-
-<div class="dark-back">
-    <div class="container">
-        <h4 id="welcome_status">Welcome to Github Connector</h4>
-        <p class="welcome-text">If you already have an account, you may log in below. Otherwise, register an
-            account.</p>
-    </div>
+	<h6 class="card-subtitle mb-2 text-muted">Otherwise, follow the link to register an account.</h6>
+	<br>
+	
+        <h4>Log In</h4>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+	<br>
+    <a href="{{ url_for('register') }}" class="card-link">Register</a>
+    <a href="{{ url_for('help_page') }}" class="card-link">Help</a>
+  </div>
 </div>
 
-<h1>Sign In</h1>
-<form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
-        {% for error in form.username.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}<br>
-        {% for error in form.password.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-    <p>{{ form.submit() }}</p>
-</form>
-</div>
 {% endblock %}

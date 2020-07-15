@@ -2,7 +2,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br>
+<div class="card p-3 mb-2 bg-light text-dark" style="width: 40rem;">
+  <div class="card-body">
     <h1>Register</h1>
+	<br>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -33,6 +37,12 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+		<br>
         <p>{{ form.submit() }}</p>
+		<br>
+		<a href="{{ url_for('help_page') }}" class="card-link">Help</a>
+		<br>
     </form>
+  <div>
+</div>
 {% endblock %}
