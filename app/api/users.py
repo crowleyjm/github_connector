@@ -4,11 +4,11 @@ import json
 from app.api import bp
 
 @bp.route('/<git_name>')
-def user_get_lang(git_name):
+def user_get_lang(git_name, token):
     github_url = 'https://api.github.com/users/' + git_name + '/repos'
     payload = {}
     headers = {
-        'Authorization': 'Bearer aeb7104e57e8e4087198ca2a6c48d63b62e866df'
+        'Authorization': 'Bearer ' + token
     }
 
     response = requests.request("GET", github_url, headers=headers, data=payload)
@@ -33,3 +33,4 @@ def user_get_lang(git_name):
                 language_dict[lang_name] += new_val
 
     return language_dict
+

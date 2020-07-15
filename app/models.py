@@ -1,6 +1,10 @@
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime, timedelta
+import base64
+
+
 
 
 @login.user_loader
@@ -30,3 +34,4 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
