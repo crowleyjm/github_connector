@@ -79,14 +79,12 @@ def home():
     account_info = github.get('/user')
     account_info_json = account_info.json()
 
-    account_languages = {}
+    # account_languages = {}
 
     if current.languages is None:
         account_languages = user_get_lang(account_info_json['login'], github.token['access_token'])
-
-    current.languages = account_languages
-    db.session.commit()
-
+        current.languages = account_languages
+        db.session.commit()
 
     return render_template('welcome.html', github_account=account_info_json['login'])
 
