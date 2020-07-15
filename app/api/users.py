@@ -8,7 +8,7 @@ def user_get_lang(git_name):
     github_url = 'https://api.github.com/users/' + git_name + '/repos'
     payload = {}
     headers = {
-        'Authorization': 'Bearer 3316982cb1c037d9432b436ea1f4ccbbb0f978aa'
+        'Authorization': 'Bearer aeb7104e57e8e4087198ca2a6c48d63b62e866df'
     }
 
     response = requests.request("GET", github_url, headers=headers, data=payload)
