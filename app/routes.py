@@ -5,6 +5,7 @@ from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
+from app.api.users import user_get_lang
 
 
 @app.route('/logout')
@@ -15,7 +16,6 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
     if current_user.is_authenticated:
         return redirect(url_for('github.login'))
     form = RegistrationForm()
@@ -79,7 +79,15 @@ def home():
     account_info = github.get('/user')
     account_info_json = account_info.json()
 
+    # account_languages = {}
+
+    if current.languages is None:
+        account_languages = user_get_lang(account_info_json['login'], github.token['access_token'])
+        current.languages = account_languages
+        db.session.commit()
+
     return render_template('welcome.html', github_account=account_info_json['login'])
+
 
 
 @app.route('/help')
