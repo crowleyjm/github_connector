@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
+    languages = db.Column(db.JSON, default=None)
 
     def __init__(self, username, email):
         self.username = username
