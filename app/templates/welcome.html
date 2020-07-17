@@ -1,27 +1,47 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <title>Welcome to GitHub Connector (Template)</title>
+<title>Welcome to GitHub Connector (Template)</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="dark-back text-center">
-        <div class="container">
-            <h4 id="welcome_status">Welcome, {{ current_user.username }}!</h4>
-            <br>
-            <h6 id="welcome_github_status">Using GitHub account: {{ github_account }}</h6>
-            <p class="welcome-text">Explore Your Languages Below.</p>
+<div class="dark-back text-center">
+    <div class="container">
+        <h4 id="welcome_status">Welcome, {{ current_user.username }}!</h4>
+        <br>
+        <h6 id="welcome_github_status">Using GitHub account: {{ github_account }}</h6>
+        <p class="welcome-text">Explore Your Languages Below.</p>
 
-            <ul>
-                {% for key, value in current_user.languages.items() %}
-                    <dt>{{ key }}</dt>
-                    <dd>{{ value }} bytes</dd>
-                {% endfor %}
-            </ul>
-
+        <ul>
+            {% for key, value in current_user.languages.items() %}
+            <dt>{{ key }}</dt>
+            <dd>{{ value }} bytes</dd>
+            {% endfor %}
+        </ul>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete Account?</button>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Do you wish to delete your account?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <form action='/delete' method="POST">
+                            <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
 
 

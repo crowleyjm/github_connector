@@ -89,6 +89,15 @@ def home():
     return render_template('welcome.html', github_account=account_info_json['login'])
 
 
+@app.route('/delete', methods=['POST'])
+@login_required
+def delete_account():
+    user = User.query.get_or_404(current_user.id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("Your account was sucesfullly deleted")
+    return redirect(url_for('login'))
+
 
 @app.route('/help')
 def help_page():
