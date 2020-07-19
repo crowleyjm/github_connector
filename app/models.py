@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timedelta
 import base64
-
+from datetime import datetime
 
 
 
@@ -11,6 +11,33 @@ import base64
 def load_user(id):
     return User.query.get(int(id))
 
+class Comment(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(2000), index=False, unique=False)
+    date_posted = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+        nullable=False)
+
+    def get_user(self):
+        return User.query.get(
+            self.user_id
+        )
+
+    def get_date_posted(self):
+        if self.date_posted:
+            return self.date_posted.strftime("%b %d %Y %H:%M:%S")
+        else:
+            return ''
+
+    def __repr__(self):
+        return self.message
+
+    def __init__(self, message, user_id):
+        self.message = message
+        self.user_id = user_id
+        self.date_posted = datetime.utcnow()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -34,4 +61,3 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-

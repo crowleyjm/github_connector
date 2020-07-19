@@ -1,18 +1,64 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, CommentForm
+from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
 from app.api.users import user_get_lang
+from flask import session, request
 
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
-    
+
+@app.route("/comments/delete" )
+@login_required
+def delete_comment():
+    if not current_user.is_authenticated:
+        return redirect(url_for('github.login'))
+
+    comment_id = request.args.get("comment_id", 0, type=int)
+
+    comment = Comment.query.get(comment_id)
+    if comment:
+        db.session.delete(comment)
+        db.session.commit()
+
+    return redirect(url_for('user_feed'))
+
+@app.route('/feed', methods=['GET', 'POST'])
+@login_required
+def user_feed():
+    if not current_user.is_authenticated:
+        return redirect(url_for('github.login'))
+
+
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        user_id = current_user.id
+        comment = Comment(message=form.message.data, user_id=user_id)
+        db.session.add(comment)
+        db.session.commit()
+
+
+    page = request.args.get('page', 1, type=int)
+    comments = Comment.query.order_by(Comment.date_posted.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False
+    )
+
+    next_url = url_for('user_feed', page=comments.next_num) \
+        if comments.has_next else None
+
+    prev_url = url_for('user_feed', page=comments.prev_num) \
+        if comments.has_prev else None
+
+    return render_template('user_feed.html', form=form, comments=comments.items, next_url=next_url,
+                           prev_url=prev_url, current_user_id = current_user.id )
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
