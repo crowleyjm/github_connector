@@ -14,6 +14,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 @app.route("/comments/delete" )
 @login_required
 def delete_comment():
@@ -29,12 +30,12 @@ def delete_comment():
 
     return redirect(url_for('user_feed'))
 
+
 @app.route('/feed', methods=['GET', 'POST'])
 @login_required
 def user_feed():
     if not current_user.is_authenticated:
         return redirect(url_for('github.login'))
-
 
     form = CommentForm()
 
@@ -43,7 +44,6 @@ def user_feed():
         comment = Comment(message=form.message.data, user_id=user_id)
         db.session.add(comment)
         db.session.commit()
-
 
     page = request.args.get('page', 1, type=int)
     comments = Comment.query.order_by(Comment.date_posted.desc()).paginate(
@@ -141,8 +141,14 @@ def delete_account():
     user = User.query.get_or_404(current_user.id)
     db.session.delete(user)
     db.session.commit()
-    flash("Your account was sucesfullly deleted")
+    flash("Your account was successfully deleted")
     return redirect(url_for('login'))
+
+
+@app.route('/connections', methods=['GET', 'POST'])
+def connections():
+    people = User.query.order_by(User.username).all()
+    return render_template('connections.html', usernames=people)
 
 
 @app.route('/help')

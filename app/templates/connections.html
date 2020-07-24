@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+    <div class="card-body">
+    <h1 class="card-title">Your Connections</h1>
+	<br>
+    <h6 class="card-subtitle mb-2 text-muted">If you already have an account, you may log in below.</h6>
+	<h6 class="card-subtitle mb-2 text-muted">Otherwise, follow the link to register an account.</h6>
+  </div>
+</div>
+    </div>
+    <div class="col-sm">
+      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+  <div class="card-body">
+    <h1 class="card-title">Suggested</h1>
+	<br>
+    {% for person in usernames %}
+      <ul class = "list-group list-group-flush" style="width: 16rem;">
+           <li class = "list-group-item">{{ person.username }}
+          <button class="btn btn-outline-info" id="send_request" type="button">Send Request</button>
+          </li>
+      </ul>
+    {% endfor %}
+  </div>
+</div>
+    </div>
+    <div class="col-sm">
+      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+    <div class="card-body">
+    <h1 class="card-title">Requests</h1>
+	<br>
+    <h6 class="card-subtitle mb-2 text-muted">If you already have an account, you may log in below.</h6>
+	<h6 class="card-subtitle mb-2 text-muted">Otherwise, follow the link to register an account.</h6>
+  </div>
+</div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

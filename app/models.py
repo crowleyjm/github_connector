@@ -11,6 +11,7 @@ from datetime import datetime
 def load_user(id):
     return User.query.get(int(id))
 
+
 class Comment(db.Model):
     __tablename__ = 'comments'
 
@@ -38,6 +39,7 @@ class Comment(db.Model):
         self.message = message
         self.user_id = user_id
         self.date_posted = datetime.utcnow()
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
