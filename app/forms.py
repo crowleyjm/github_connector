@@ -13,7 +13,6 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
     remember_me = BooleanField()
 
-
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
@@ -31,5 +30,10 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In')
 
+
 class CommentForm(FlaskForm):
     message = StringField('message', validators=[DataRequired()])
+
+
+class ConnectionRequestForm(FlaskForm):
+    submit = SubmitField('Send Request')

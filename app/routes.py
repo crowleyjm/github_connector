@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -14,7 +14,8 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route("/comments/delete" )
+
+@app.route("/comments/delete")
 @login_required
 def delete_comment():
     if not current_user.is_authenticated:
@@ -29,12 +30,12 @@ def delete_comment():
 
     return redirect(url_for('user_feed'))
 
+
 @app.route('/feed', methods=['GET', 'POST'])
 @login_required
 def user_feed():
     if not current_user.is_authenticated:
         return redirect(url_for('github.login'))
-
 
     form = CommentForm()
 
@@ -43,7 +44,6 @@ def user_feed():
         comment = Comment(message=form.message.data, user_id=user_id)
         db.session.add(comment)
         db.session.commit()
-
 
     page = request.args.get('page', 1, type=int)
     comments = Comment.query.order_by(Comment.date_posted.desc()).paginate(
@@ -141,8 +141,36 @@ def delete_account():
     user = User.query.get_or_404(current_user.id)
     db.session.delete(user)
     db.session.commit()
-    flash("Your account was sucesfullly deleted")
+    flash("Your account was successfully deleted")
     return redirect(url_for('login'))
+
+
+@app.route('/connections', methods=['GET', 'POST'])
+@login_required
+def connections():
+    people = User.query.filter(User.username != current_user.username).all()
+    requests = current_user.get_requests()
+    form = ConnectionRequestForm()
+    return render_template('connections.html', form=form, usernames=people, requests=requests)
+
+
+@app.route('/connections/send_request/<username>', methods=['POST'])
+@login_required
+def send_request(username):
+    form = ConnectionRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        current_user.request(user)
+        db.session.commit()
+        if user is None:
+            flash('User {} not found.'.format(username))
+            return redirect(url_for('welcome'))
+        current_user.request(user)
+        db.session.commit()
+        flash('connection request sent to {}!'.format(username))
+        return redirect(url_for('connections', username=username))
+    else:
+        return redirect(url_for('welcome'))
 
 
 @app.route('/help')
