@@ -181,3 +181,8 @@ def help_page():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/explore')
+@login_required
+def explore():
+    return render_template('explore.html')
