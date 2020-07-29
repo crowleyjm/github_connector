@@ -2,6 +2,7 @@ import requests
 from flask import Flask, request, make_response
 import json
 from app.api import bp
+import collections
 
 @bp.route('/<git_name>')
 def user_get_lang(git_name, token):
@@ -32,5 +33,7 @@ def user_get_lang(git_name, token):
             else:
                 language_dict[lang_name] += new_val
 
-    return language_dict
+    ordered_lang = collections.OrderedDict(language_dict)
+
+    return ordered_lang
 
