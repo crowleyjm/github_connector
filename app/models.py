@@ -1,10 +1,11 @@
+from sqlalchemy import UniqueConstraint
+
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timedelta
 import base64
 from datetime import datetime
-
 
 
 @login.user_loader
@@ -19,7 +20,7 @@ class Comment(db.Model):
     message = db.Column(db.String(2000), index=False, unique=False)
     date_posted = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
-        nullable=False)
+                        nullable=False)
 
     def get_user(self):
         return User.query.get(
@@ -41,6 +42,13 @@ class Comment(db.Model):
         self.date_posted = datetime.utcnow()
 
 
+connections = db.Table('connections',
+                       db.Column('sender_id', db.Integer, db.ForeignKey('users.id')),
+                       db.Column('recipient_id', db.Integer, db.ForeignKey('users.id')),
+                       db.Column('are_connected', db.Boolean, default=False)
+                       )
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
@@ -50,6 +58,11 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
     languages = db.Column(db.JSON, default=None)
+    connected = db.relationship(
+        'User', secondary=connections,
+        primaryjoin=(connections.c.sender_id == id),
+        secondaryjoin=(connections.c.recipient_id == id),
+        backref=db.backref('connections', lazy='dynamic'), lazy='dynamic')
 
     def __init__(self, username, email):
         self.username = username
@@ -63,3 +76,21 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def request(self, users):
+        if not self.is_requested(users):
+            self.connected.append(users)
+
+    def is_requested(self, users):
+        return self.connected.filter(
+            connections.c.recipient_id == users.id).count() > 0
+
+    def get_requests(self):
+        requests = User.query.join(connections, (
+                connections.c.recipient_id == self.id)).filter(
+                connections.c.sender_id == User.id)
+        return requests
+
+    def is_connected(self, users):
+        return self.connected.filter(
+            connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.

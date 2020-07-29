@@ -35,5 +35,5 @@ class CommentForm(FlaskForm):
     message = StringField('message', validators=[DataRequired()])
 
 
-class ConnectionRequest(FlaskForm):
+class ConnectionRequestForm(FlaskForm):
     submit = SubmitField('Send Request')
