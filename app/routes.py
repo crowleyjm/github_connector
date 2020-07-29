@@ -125,8 +125,6 @@ def home():
     account_info = github.get('/user')
     account_info_json = account_info.json()
 
-    # account_languages = {}
-
     if current.languages is None:
         account_languages = user_get_lang(account_info_json['login'], github.token['access_token'])
         current.languages = account_languages
@@ -148,7 +146,19 @@ def delete_account():
 @app.route('/connections', methods=['GET', 'POST'])
 @login_required
 def connections():
-    people = User.query.filter(User.username != current_user.username).all()
+    user_languages = current_user.languages
+    lang_list = []
+
+    for key in user_languages:
+        lang_list.append(key)
+
+    len_lang = len(lang_list)
+
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).all()
+    else:
+        people = User.query.filter(User.username != current_user.username and lang_list[0] in User.languages).all()
+
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
     return render_template('connections.html', form=form, usernames=people, requests=requests)
