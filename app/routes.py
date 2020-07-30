@@ -7,6 +7,7 @@ from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
 from app.api.users import user_get_lang
 from flask import session, request
+from sqlalchemy import func
 
 
 @app.route('/logout')
@@ -157,7 +158,7 @@ def connections():
     if len_lang == 0:
         people = User.query.filter(User.username != current_user.username).all()
     else:
-        people = User.query.filter_by(User.username != current_user.username, 'Python' in User.languages).all()
+        people = User.query.filter_by(User.username != current_user.username, func.json_contains(User.languages, lang_list[0]) == 1).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
