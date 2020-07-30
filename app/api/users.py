@@ -33,7 +33,7 @@ def user_get_lang(git_name, token):
             else:
                 language_dict[lang_name] += new_val
 
-    ordered_lang = collections.OrderedDict(sorted(language_dict.items(), key=lambda x: x[1]))
+    ordered_lang = collections.OrderedDict(sorted(language_dict.items(), key=lambda x: x[1], reverse=True))
 
     return ordered_lang
 
