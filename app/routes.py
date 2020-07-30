@@ -157,7 +157,7 @@ def connections():
     if len_lang == 0:
         people = User.query.filter(User.username != current_user.username).all()
     else:
-        people = User.query.filter_by(User.username != current_user.username and 'Python' in User.languages).all()
+        people = User.query.filter_by(User.username != current_user.username, 'Python' in User.languages).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
