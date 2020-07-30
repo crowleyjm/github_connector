@@ -7,7 +7,8 @@ from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
 from app.api.users import user_get_lang
 from flask import session, request
-from sqlalchemy import func
+import collections
+
 
 
 @app.route('/logout')
@@ -150,7 +151,9 @@ def connections():
     user_languages = current_user.languages
     lang_list = []
 
-    for key in user_languages:
+    ordered_lang = collections.OrderedDict(sorted(user_languages.items(), key=lambda x: x[1], reverse=True))
+
+    for key in ordered_lang:
         lang_list.append(key)
 
     len_lang = len(lang_list)
