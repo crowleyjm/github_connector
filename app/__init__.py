@@ -7,6 +7,7 @@ from app.api import bp as api_bp
 
 
 
+
 app = Flask(__name__)
 app.register_blueprint(api_bp, url_prefix='/api')
 app.config.from_object(Config)

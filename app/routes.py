@@ -7,6 +7,8 @@ from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
 from app.api.users import user_get_lang
 from flask import session, request
+import collections
+
 
 
 @app.route('/logout')
@@ -125,8 +127,6 @@ def home():
     account_info = github.get('/user')
     account_info_json = account_info.json()
 
-    # account_languages = {}
-
     if current.languages is None:
         account_languages = user_get_lang(account_info_json['login'], github.token['access_token'])
         current.languages = account_languages
@@ -148,7 +148,22 @@ def delete_account():
 @app.route('/connections', methods=['GET', 'POST'])
 @login_required
 def connections():
-    people = User.query.filter(User.username != current_user.username).all()
+    user_languages = current_user.languages
+    lang_list = []
+
+    ordered_lang = collections.OrderedDict(sorted(user_languages.items(), key=lambda x: x[1], reverse=True))
+
+    for key in ordered_lang:
+        lang_list.append(key)
+
+    len_lang = len(lang_list)
+
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).all()
+    else:
+        favorite_lang = lang_list[0]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
     return render_template('connections.html', form=form, usernames=people, requests=requests)
@@ -181,3 +196,8 @@ def help_page():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/explore')
+@login_required
+def explore():
+    return render_template('explore.html')
