@@ -159,7 +159,7 @@ def connections():
         people = User.query.filter(User.username != current_user.username).all()
     else:
         print(lang_list)
-        people = User.query.filter(User.username != current_user.username, func.json_contains(User.languages, lang_list[0]) == 1).all()
+        people = User.query.filter(User.username != current_user.username, func.json_array_elements(User.languages, 'PYTHON') == 1).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
