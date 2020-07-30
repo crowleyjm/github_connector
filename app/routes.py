@@ -158,9 +158,8 @@ def connections():
     if len_lang == 0:
         people = User.query.filter(User.username != current_user.username).all()
     else:
-        print(lang_list)
-        new = lang_list[0]
-        people = User.query.filter(User.username != current_user.username,User.languages.has_key(new)).all()
+        favorite_lang = lang_list[-1]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
