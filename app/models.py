@@ -98,5 +98,5 @@ class User(UserMixin, db.Model):
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
 
     def accept_request(self, users):
-        request = connections.filter_by(recipient_id=current_user.id, sender_id = user.id)
+        request = connections.filter_by(recipient_id=self.id, sender_id = users.id)
         request.are_connected = True
