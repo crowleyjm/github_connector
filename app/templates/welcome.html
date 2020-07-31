@@ -34,7 +34,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <form action='/delete' method="POST">
+                        <form action="{{ url_for('delete') }}" method="POST">
                             <input class="btn btn-danger" type="submit" value="Delete">
                         </form>
                     </div>

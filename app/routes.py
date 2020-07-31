@@ -187,6 +187,15 @@ def send_request(username):
     else:
         return redirect(url_for('welcome'))
 
+@app.route('/connections/accept_request/<username>', methods=['POST'])
+@login_required
+def accept_request(username):
+    user = User.query.filter_by(username=username).first()
+    current_user.accept_request(user)
+    db.session.commit()
+    flash('Connection request accepted!')
+    return redirect(url_for('connections', username=username))
+
 
 @app.route('/help')
 def help_page():
