@@ -94,6 +94,17 @@
                         {% endif %}
                     {% endif %}
                 {% endfor %}
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="previous{% if not prev_url_conn %} disabled{% endif %}">
+                        <a class="nav-item nav-link" href="{{ prev_url_conn or '#' }}">
+                            <span aria-hidden="true"></span> Newer Suggestions
+                        </a>
+                    </li>
+                    <li class="next{% if not next_url_conn %} disabled{% endif %}">
+                        <a class="nav-item nav-link" href="{{ next_url_conn or '#' }}">Older Suggestions <span aria-hidden="true"></span>
+                        </a>
+                    </li>
+                </ul>
 
             </div>
         </div>
