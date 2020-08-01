@@ -226,25 +226,25 @@ def profile():
     len_lang = len(lang_list)
 
     if len_lang == 0:
-        people = User.query.filter(User.username != current_user.username).all()
+        people = User.query.paginate(filter(User.username != current_user.username).all(), app.config['CONNECTIONS_PER_PAGE'], False)
     else:
         favorite_lang = lang_list[0]
-        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+        people = User.query.paginate(filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all(), app.config['CONNECTIONS_PER_PAGE'], False)
 
     conn_form = ConnectionRequestForm()
 
     conn_page = request.args.get('page', 1, type=int)
-    conn_posts = people.paginate(
-        conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
-    conn_next_url = url_for('profile', conn_page=conn_posts.next_num) \
-        if conn_posts.has_next else None
-    conn_prev_url = url_for('profile', conn_page=conn_posts.prev_num) \
-        if conn_posts.has_prev else None
+    # conn_posts = people.paginate(
+    #     conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+    conn_next_url = url_for('profile', conn_page=people.next_num) \
+        if people.has_next else None
+    conn_prev_url = url_for('profile', conn_page=people.prev_num) \
+        if people.has_prev else None
 
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
                            prev_url=prev_url, user=current_user, form_conn=conn_form,
-                           post_conn=conn_posts.items, next_url_conn=conn_next_url,
+                           post_conn=people.items, next_url_conn=conn_next_url,
                            prev_url_conn=conn_prev_url)
 
 
