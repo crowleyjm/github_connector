@@ -98,5 +98,19 @@ class User(UserMixin, db.Model):
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
 
     def accept_request(self, users):
-        request = connections.filter_by(recipient_id=self.id, sender_id = users.id)
-        request.are_connected = True
+        #request = db.session.query(connections).filter(connections.c.recipient_id == self.id, connections.c.sender_id == users.id).first()
+        #request.are_connected = True
+        #Doesn't work can't edit the tuple
+
+        #for x in request:
+            #print(x.are_connected)
+
+
+        #Not working, returning Users which I can't edit the are_connected
+        #request = users.connected.filter(connections.c.recipient_id == self.id).filter(connections.c.are_connected == False)
+        
+        update = connections.update().where(connections.c.recipient_id == self.id).where(connections.c.sender_id == users.id).values(are_connected = True)
+        db.session.execute(update)
+        request = db.session.query(connections).filter(connections.c.recipient_id == self.id, connections.c.sender_id == users.id).first()
+        print(request)
+
