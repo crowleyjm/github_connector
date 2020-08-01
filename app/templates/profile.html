@@ -73,6 +73,19 @@
                         </li>
                     </ul>
                 </nav>
+                <ul class="nav justify-content-center">
+                    <li class="previous{% if not prev_url %} disabled{% endif %}">
+                        <a href="{{ prev_url or '#' }}">
+                            <span aria-hidden="true"></span> Newer posts
+                        </a>
+                    </li>
+                    <li class="next{% if not next_url %} disabled{% endif %}">
+                        <a href="{{ next_url or '#' }}">
+                            Older posts <span aria-hidden="true"></span>
+                        </a>
+                    </li>
+                </ul>
+
 
             </div>
             <div class="col-sm-3">
