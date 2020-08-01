@@ -219,7 +219,3 @@ def profile():
                            prev_url=prev_url, user=current_user)
 
 
-
-    return render_template('profile.html', user=current_user)
-
-

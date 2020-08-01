@@ -20,7 +20,7 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(2000), index=False, unique=False)
-    date_posted = db.Column(db.DateTime)
+    date_posted = db.Column(db.DateTime, index=True, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
 
