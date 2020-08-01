@@ -114,10 +114,13 @@ class User(UserMixin, db.Model):
             digest, size)
 
     def connected_posts(self):
-        connected = Comment.query.join(
+        connected_one = Comment.query.join(
             connections, (connections.c.recipient_id == Comment.user_id)).filter(
             connections.c.sender_id == self.id)
+        connected_two = Comment.query.join(
+            connections, (connections.c.sender_id == Comment.user_id)).filter(
+            connections.c.recipient_id == self.id)
         own = Comment.query.filter_by(user_id=self.id)
-        return connected.union(own).order_by(Comment.date_posted.desc())
+        return connected_one.union(own).union(connected_two).order_by(Comment.date_posted.desc())
 
 
