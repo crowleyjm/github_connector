@@ -231,10 +231,9 @@ def profile():
         favorite_lang = lang_list[0]
         people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
 
-    requests = current_user.get_requests()
     conn_form = ConnectionRequestForm()
 
-    conn_page = request.args.get('conn_page', 1, type=int)
+    conn_page = request.args.get('page', 1, type=int)
     conn_posts = people.paginate(
         conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
     conn_next_url = url_for('profile', conn_page=conn_posts.next_num) \
