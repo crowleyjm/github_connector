@@ -107,6 +107,6 @@ class User(UserMixin, db.Model):
             connections, (connections.c.recipient_id == Comment.user_id)).filter(
             connections.c.sender_id == self.id)
         own = Comment.query.filter_by(user_id=self.id)
-        return connected.union(own).order_by(Comment.timestamp.desc())
+        return connected.union(own).order_by(Comment.date_posted.desc())
 
 
