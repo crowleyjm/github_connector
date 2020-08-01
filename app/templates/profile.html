@@ -13,6 +13,7 @@
                 <h5>Connected GitHub Account: {{ user.github }}</h5>
                 <h3>Languages: </h3>
                 <h6>{% for key, value in user.languages.items() %} {{ key }}| {% endfor %}</h6>
+                <br>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
                         <a class="btn btn-outline-dark" href="{{ url_for('connections') }}" role="button">Connections</a>
