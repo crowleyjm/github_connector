@@ -1,85 +1,87 @@
 {% extends "base.html" %}
 {% block content %}
-<br>
-<div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
-    <div class="card-body">
-    <h1 class="card-title">Connections</h1>
-	<br>
-       {% for person in usernames %}
-       {% if current_user.is_connected(person)%}
-       <form method="post">
-           <ul class = "list-group" style="width: 16rem;">
-               <li class = "list-group-item d-flex justify-content-end">{{ person.username }}
-                    {{ form.hidden_tag() }}
-                    <p>&nbsp;</p>
-                    {{ form.submit(value='View Profile') }}
-               </li>
-           </ul>
-       </form>
-       {% elif person.is_connected(current_user)%}
-       <form method="post">
-           <ul class = "list-group" style="width: 16rem;">
-               <li class = "list-group-item d-flex justify-content-end">{{ person.username }}
-                    {{ form.hidden_tag() }}
-                    <p>&nbsp;</p>
-                    {{ form.submit(value='View Profile') }}
-               </li>
-           </ul>
-       </form>
-       {% endif %}
-       {% endfor %}
-  </div>
-</div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+                    <div class="card-body">
+                        <h1 class="card-title">Connections</h1>
+                        <br>
+                        {% for person in usernames %}
+                            {% if current_user.is_connected(person) %}
+                                <form method="post">
+                                    <ul class="list-group" style="width: 16rem;">
+                                        <li class="list-group-item d-flex justify-content-end">{{ person.username }}
+                                            {{ form.hidden_tag() }}
+                                            <p>&nbsp;</p>
+                                            {{ form.submit(value='View Profile') }}
+                                        </li>
+                                    </ul>
+                                </form>
+                            {% elif person.is_connected(current_user) %}
+                                <form method="post">
+                                    <ul class="list-group" style="width: 16rem;">
+                                        <li class="list-group-item d-flex justify-content-end">{{ person.username }}
+                                            {{ form.hidden_tag() }}
+                                            <p>&nbsp;</p>
+                                            {{ form.submit(value='View Profile') }}
+                                        </li>
+                                    </ul>
+                                </form>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+                    <div class="card-body">
+                        <h1 class="card-title">Suggested</h1>
+                        <br>
+                        {% for person in usernames %}
+                            {% if not current_user.is_requested(person) %}
+                                {% if not person.is_requested(current_user) %}
+                                    <form action="{{ url_for('send_request', username=person.username) }}"
+                                          method="post">
+                                        <ul class="list-group" style="width: 16rem;">
+                                            <li class="list-group-item d-flex justify-content-end">{{ person.username }}
+                                                {{ form.hidden_tag() }}
+                                                <p>&nbsp;</p>
+                                                {{ form.submit(value='Send Request') }}
+                                            </li>
+                                        </ul>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
+                    <div class="card-body">
+                        <h1 class="card-title">Requests</h1>
+                        <br>
+                        {% for person in requests %}
+                            <ul class="list-group" style="width: 16rem;">
+                                <li class="list-group-item d-flex justify-content-end">{{ person.username }}
+                                    {{ form.hidden_tag() }}
+                                    <p>&nbsp;</p>
+                                    <form action="{{ url_for('accept_request', username=person.username) }}"
+                                          method="post">
+                                        {{ form.submit(value='Accept') }}
+                                    </form>
+                                    <p>&nbsp;</p>
+                                    <form action=method="post">
+                                        {{ form.submit(value='Decline') }}
+                                    </form>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-sm">
-      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
-  <div class="card-body">
-    <h1 class="card-title">Suggested</h1>
-	<br>
-       {% for person in usernames %}
-       {% if not current_user.is_requested(person)%}
-       {% if not person.is_requested(current_user)%}
-       <form action="{{ url_for('send_request', username=person.username) }}" method="post">
-           <ul class = "list-group" style="width: 16rem;">
-               <li class = "list-group-item d-flex justify-content-end">{{ person.username }}
-                    {{ form.hidden_tag() }}
-                   <p>&nbsp;</p>
-                    {{ form.submit(value='Send Request') }}
-               </li>
-           </ul>
-       </form>
-       {% endif %}
-       {% endif %}
-       {% endfor %}
-  </div>
-</div>
-    </div>
-    <div class="col-sm">
-      <div class="card border-dark p-3 mb-2 bg-light text-dark text-center mx-auto" style="width: 20rem;">
-    <div class="card-body">
-    <h1 class="card-title">Requests</h1>
-	<br>
-       {% for person in requests %}
-           <ul class = "list-group" style="width: 16rem;">
-               <li class = "list-group-item d-flex justify-content-end">{{ person.username }}
-                    {{ form.hidden_tag() }}
-                    <p>&nbsp;</p>
-                    <form action="{{ url_for('accept_request', username=person.username) }}" method="post">
-                    {{ form.submit(value='Accept') }}
-                    </form>
-                    <p>&nbsp;</p>
-                    <form action= method="post">
-                    {{ form.submit(value='Decline') }}
-                    </form>
-               </li>
-           </ul>
-       {% endfor %}
-  </div>
-</div>
-    </div>
-  </div>
-</div>
 {% endblock %}
