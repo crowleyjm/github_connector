@@ -184,7 +184,7 @@ def send_request(username):
         db.session.commit()
         if user is None:
             flash('User {} not found.'.format(username))
-            return redirect(url_for('welcome'))
+            return redirect(url_for('profile'))
         current_user.request(user)
         db.session.commit()
         flash('connection request sent to {}!'.format(username))
