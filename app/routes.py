@@ -208,7 +208,7 @@ def profile():
         db.session.commit()
         return redirect(url_for('profile'))
     page = request.args.get('page', 1, type=int)
-    posts = current_user.followed_posts().paginate(
+    posts = current_user.connected_posts().paginate(
         page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('index', page=posts.next_num) \
         if posts.has_next else None
