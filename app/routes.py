@@ -210,9 +210,9 @@ def profile():
     page = request.args.get('page', 1, type=int)
     posts = current_user.connected_posts().paginate(
         page, app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('index', page=posts.next_num) \
+    next_url = url_for('profile', page=posts.next_num) \
         if posts.has_next else None
-    prev_url = url_for('index', page=posts.prev_num) \
+    prev_url = url_for('profile', page=posts.prev_num) \
         if posts.has_prev else None
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
