@@ -15,11 +15,13 @@
                 <h6>{% for key, value in user.languages.items() %} {{ key }}| {% endfor %}</h6>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <a class="btn btn-dark" href="{{ url_for('connections') }}" role="button">Connections</a>
+                        <a class="btn btn-outline-dark" href="{{ url_for('connections') }}" role="button">Connections</a>
                     </li>
+                    <br>
                     <li class="nav-item">
-                        <a class="btn btn-dark" href="{{ url_for('logout') }}" role="button">Logout</a>
+                        <a class="btn btn-outline-dark" href="{{ url_for('logout') }}" role="button">Logout</a>
                     </li>
+                    <br>
                     <li class="nav-item">
                         <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete Account
                         </button>
