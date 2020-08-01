@@ -20,7 +20,7 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(2000), index=False, unique=False)
-    date_posted = db.Column(db.DateTime, index=True, default=datetime.now())
+    date_posted = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
 
@@ -38,10 +38,10 @@ class Comment(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-    # def __init__(self, body, user_id):
-    #     self.body = body
-    #     self.user_id = user_id
-    #     self.date_posted = datetime.utcnow()
+    def __init__(self, body, author):
+        self.body = body
+        self.author = author
+        self.date_posted = datetime.now()
 
 
 connections = db.Table('connections',
