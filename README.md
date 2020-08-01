@@ -12,7 +12,7 @@ GitHub Connector is a social media application that allows people with similar e
   - Sign in and out of the application and ability to delete your profile.
   
   ## **Software Architecture and Design**
-GitHub Connector is built with a PostgreSQL(Under Consideration), Express(Under Consideration), Node.js or Python/Flask(Under Consideration) and Bootstrap stack. Express is the structural framework and Flask/Node.js us used for the backend. 
+GitHub Connector is built with a PostgreSQL, Python/Flask, and Bootstrap stack. Express is the structural framework and Flask/Node.js us used for the backend. 
 
 The app will use OAuth authentication. This is a token based technocloy that allows for users to only access their data and prevents users from accessing other peoples data. 
 
