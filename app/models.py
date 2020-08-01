@@ -38,10 +38,10 @@ class Comment(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-    def __init__(self, body, user_id):
-        self.body = body
-        self.user_id = user_id
-        self.date_posted = datetime.utcnow()
+    # def __init__(self, body, user_id):
+    #     self.body = body
+    #     self.user_id = user_id
+    #     self.date_posted = datetime.utcnow()
 
 
 connections = db.Table('connections',
