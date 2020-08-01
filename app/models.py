@@ -4,7 +4,7 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timedelta
-import base64
+from hashlib import md5
 from datetime import datetime
 from sqlalchemy.dialects.postgresql.json import JSONB
 
@@ -96,3 +96,9 @@ class User(UserMixin, db.Model):
     def is_connected(self, users):
         return self.connected.filter(
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+            digest, size)
+
