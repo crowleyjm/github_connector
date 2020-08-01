@@ -199,7 +199,7 @@ def about():
 
 @app.route('/profile')
 @login_required
-def explore():
+def profile():
     return render_template('profile.html')
 
 
