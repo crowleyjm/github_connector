@@ -4,7 +4,7 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime, timedelta
-import base64
+from hashlib import md5
 from datetime import datetime
 from sqlalchemy.dialects.postgresql.json import JSONB
 
@@ -19,8 +19,8 @@ class Comment(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(2000), index=False, unique=False)
-    date_posted = db.Column(db.DateTime)
+    body = db.Column(db.String(240), index=False, unique=False)
+    date_posted = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
 
@@ -36,12 +36,12 @@ class Comment(db.Model):
             return ''
 
     def __repr__(self):
-        return self.message
+        return '<Post {}>'.format(self.body)
 
-    def __init__(self, message, user_id):
-        self.message = message
-        self.user_id = user_id
-        self.date_posted = datetime.utcnow()
+    def __init__(self, body, author):
+        self.body = body
+        self.author = author
+        self.date_posted = datetime.now()
 
 
 connections = db.Table('connections',
@@ -59,6 +59,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
+    posts = db.relationship('Comment', backref='author', lazy='dynamic')
     languages = db.Column(JSONB, default=None)
     connected = db.relationship(
         'User', secondary=connections,
@@ -113,4 +114,16 @@ class User(UserMixin, db.Model):
         db.session.execute(update)
         request = db.session.query(connections).filter(connections.c.recipient_id == self.id, connections.c.sender_id == users.id).first()
         print(request)
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+            digest, size)
+
+    def connected_posts(self):
+        connected = Comment.query.join(
+            connections, (connections.c.recipient_id == Comment.user_id)).filter(
+            connections.c.sender_id == self.id)
+        own = Comment.query.filter_by(user_id=self.id)
+        return connected.union(own).order_by(Comment.date_posted.desc())
+
 

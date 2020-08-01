@@ -5,6 +5,7 @@ LOCAL_DEBUG = False
 
 class Config(object):
     POSTS_PER_PAGE = 10
+    CONNECTIONS_PER_PAGE = 5
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'super-secret-key'
 
     DATABASE_URL = None
