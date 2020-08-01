@@ -15,8 +15,8 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Comment(db.Model):
-    __tablename__ = 'comments'
+class Post(db.Model):
+    # __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(2000), index=False, unique=False)
@@ -24,24 +24,24 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
 
-    def get_user(self):
-        return User.query.get(
-            self.user_id
-        )
-
-    def get_date_posted(self):
-        if self.date_posted:
-            return self.date_posted.strftime("%b %d %Y %H:%M:%S")
-        else:
-            return ''
+    # def get_user(self):
+    #     return User.query.get(
+    #         self.user_id
+    #     )
+    #
+    # def get_date_posted(self):
+    #     if self.date_posted:
+    #         return self.date_posted.strftime("%b %d %Y %H:%M:%S")
+    #     else:
+    #         return ''
 
     def __repr__(self):
         return '<Comment {}>'.format(self.message)
 
-    def __init__(self, message, user_id):
-        self.message = message
-        self.user_id = user_id
-        self.date_posted = datetime.utcnow()
+    # def __init__(self, message, user_id):
+    #     self.message = message
+    #     self.user_id = user_id
+    #     self.date_posted = datetime.utcnow()
 
 
 connections = db.Table('connections',
@@ -104,10 +104,10 @@ class User(UserMixin, db.Model):
             digest, size)
 
     def connected_posts(self):
-        connected = Comment.query.join(
-            connections, (connections.c.recipient_id == Comment.user_id)).filter(
+        connected = Post.query.join(
+            connections, (connections.c.recipient_id == Post.user_id)).filter(
             connections.c.sender_id == self.id)
-        own = Comment.query.filter_by(user_id=self.id)
-        return connected.union(own).order_by(Comment.date_posted.desc())
+        own = Post.query.filter_by(user_id=self.id)
+        return connected.union(own).order_by(Post.date_posted.desc())
 
 
