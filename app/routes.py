@@ -224,21 +224,21 @@ def profile():
         lang_list.append(key)
 
     len_lang = len(lang_list)
+    conn_page = request.args.get('conn_page', 1, type=int)
 
     if len_lang == 0:
-        people = User.query.paginate(filter(User.username != current_user.username), app.config['CONNECTIONS_PER_PAGE'], False).all()
+        people = User.query.filter(User.username != current_user.username).all().paginate(conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
     else:
         favorite_lang = lang_list[0]
-        people = User.query.paginate(filter(User.username != current_user.username, User.languages.has_key(favorite_lang)), app.config['CONNECTIONS_PER_PAGE'], False).all()
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all().paginate(conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
 
     conn_form = ConnectionRequestForm()
 
-    conn_page = request.args.get('page', 1, type=int)
-    # conn_posts = people.paginate(
-    #     conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
-    conn_next_url = url_for('profile', conn_page=people.next_num) \
+    conn_posts = people.paginate(
+        conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+    conn_next_url = url_for('profile', conn_page=conn_posts.next_num) \
         if people.has_next else None
-    conn_prev_url = url_for('profile', conn_page=people.prev_num) \
+    conn_prev_url = url_for('profile', conn_page=conn_posts.prev_num) \
         if people.has_prev else None
 
     return render_template('profile.html', title='Home', form=form,
