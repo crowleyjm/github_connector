@@ -206,7 +206,7 @@ def profile():
         post = Post(message=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile'), user=current_user)
     page = request.args.get('page', 1, type=int)
     posts = current_user.connected_posts().paginate(
         page, app.config['POSTS_PER_PAGE'], False)
@@ -217,9 +217,4 @@ def profile():
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
                            prev_url=prev_url, user=current_user)
-
-
-
-    return render_template('profile.html', user=current_user)
-
 
