@@ -206,7 +206,7 @@ def profile():
         post = Post(message=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for('profile'), user=current_user)
+        # return redirect(url_for('profile'), user=current_user)
     page = request.args.get('page', 1, type=int)
     posts = current_user.connected_posts().paginate(
         page, app.config['POSTS_PER_PAGE'], False)
