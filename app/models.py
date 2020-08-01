@@ -115,7 +115,6 @@ class User(UserMixin, db.Model):
         update = connections.update().where(connections.c.recipient_id == self.id).where(connections.c.sender_id == users.id).values(are_connected = True)
         db.session.execute(update)
         request = db.session.query(connections).filter(connections.c.recipient_id == self.id, connections.c.sender_id == users.id).first()
-        print(request)
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
