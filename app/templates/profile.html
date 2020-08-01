@@ -42,7 +42,7 @@
                         {% if not person.is_requested(current_user) %}
                             <form action="{{ url_for('send_request', username=person.username) }}" method="post">
                                 <ul class="list-group" style="width: 16rem;">
-                                    <li class="list-group-item d-flex justify-content-end">{{ person.username }}
+                                    <li class="list-group-item d-flex justify-content-end"><img src="{{ user.avatar(40) }}" class="rounded-circle"> {{ person.username }}
                                         {{ form.hidden_tag() }}
                                         <p>&nbsp;</p>
                                         {{ form.submit(value='Send Request') }}
