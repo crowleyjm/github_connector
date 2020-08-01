@@ -19,7 +19,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(2000), index=False, unique=False)
+    body = db.Column(db.String(240), index=False, unique=False)
     date_posted = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
