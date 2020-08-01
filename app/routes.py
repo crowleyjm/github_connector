@@ -226,10 +226,10 @@ def profile():
     len_lang = len(lang_list)
 
     if len_lang == 0:
-        people = User.query.paginate(filter(User.username != current_user.username).all(), app.config['CONNECTIONS_PER_PAGE'], False)
+        people = User.query.paginate(filter(User.username != current_user.username), app.config['CONNECTIONS_PER_PAGE'], False).all()
     else:
         favorite_lang = lang_list[0]
-        people = User.query.paginate(filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all(), app.config['CONNECTIONS_PER_PAGE'], False)
+        people = User.query.paginate(filter(User.username != current_user.username, User.languages.has_key(favorite_lang)), app.config['CONNECTIONS_PER_PAGE'], False).all()
 
     conn_form = ConnectionRequestForm()
 
