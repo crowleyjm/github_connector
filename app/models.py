@@ -102,3 +102,11 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
+    def connected_posts(self):
+        connected = Comment.query.join(
+            connections, (connections.c.recipient_id == Comment.user_id)).filter(
+            connections.c.sender_id == self.id)
+        own = Comment.query.filter_by(user_id=self.id)
+        return connected.union(own).order_by(Comment.timestamp.desc())
+
+

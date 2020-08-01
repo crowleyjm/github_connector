@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -197,9 +197,28 @@ def help_page():
 def about():
     return render_template('about.html')
 
-@app.route('/profile')
+
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Comment(message=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.followed_posts().paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('index', page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('index', page=posts.prev_num) \
+        if posts.has_prev else None
+    return render_template('profile.html', title='Home', form=form,
+                           posts=posts.items, next_url=next_url,
+                           prev_url=prev_url)
+
+
 
     return render_template('profile.html', user=current_user)
 
