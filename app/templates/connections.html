@@ -63,17 +63,19 @@
     <h1 class="card-title">Requests</h1>
 	<br>
        {% for person in requests %}
-       <form action= method="post">
            <ul class = "list-group" style="width: 16rem;">
                <li class = "list-group-item d-flex justify-content-end">{{ person.username }}
                     {{ form.hidden_tag() }}
                     <p>&nbsp;</p>
+                    <form action="{{ url_for('accept_request', username=person.username) }}" method="post">
                     {{ form.submit(value='Accept') }}
+                    </form>
                     <p>&nbsp;</p>
+                    <form action= method="post">
                     {{ form.submit(value='Decline') }}
+                    </form>
                </li>
            </ul>
-       </form>
        {% endfor %}
   </div>
 </div>

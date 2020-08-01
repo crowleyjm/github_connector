@@ -91,12 +91,22 @@ class User(UserMixin, db.Model):
     def get_requests(self):
         requests = User.query.join(connections, (
                 connections.c.recipient_id == self.id)).filter(
-                connections.c.sender_id == User.id)
+                connections.c.sender_id == User.id).filter(
+                connections.c.are_connected == "false"
+                )
         return requests
 
     def is_connected(self, users):
         return self.connected.filter(
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
+
+    def accept_request(self, users):
+        
+        update = connections.update().where(
+            connections.c.recipient_id == self.id).where(
+            connections.c.sender_id == users.id).values(are_connected = True)
+            
+        db.session.execute(update)
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
