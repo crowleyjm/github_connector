@@ -132,7 +132,12 @@ def home():
         current.languages = account_languages
         db.session.commit()
 
-    return render_template('welcome.html', github_account=account_info_json['login'])
+    if current.github is None:
+        github_account = account_info_json['login']
+        current.github = github_account
+        db.session.commit()
+
+    return redirect(url_for('profile'))
 
 
 @app.route('/delete', methods=['POST'])
@@ -179,13 +184,13 @@ def send_request(username):
         db.session.commit()
         if user is None:
             flash('User {} not found.'.format(username))
-            return redirect(url_for('welcome'))
+            return redirect(url_for('profile'))
         current_user.request(user)
         db.session.commit()
         flash('connection request sent to {}!'.format(username))
         return redirect(url_for('connections', username=username))
     else:
-        return redirect(url_for('welcome'))
+        return redirect(url_for('profile'))
 
 @app.route('/connections/accept_request/<username>', methods=['POST'])
 @login_required
@@ -243,8 +248,7 @@ def profile():
 
     conn_form = ConnectionRequestForm()
 
-    # conn_posts = people.paginate(
-    #     conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+
     conn_next_url = url_for('profile', conn_page=people.next_num) \
         if people.has_next else None
     conn_prev_url = url_for('profile', conn_page=people.prev_num) \
