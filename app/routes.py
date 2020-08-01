@@ -203,7 +203,7 @@ def about():
 def profile():
     form = PostForm()
     if form.validate_on_submit():
-        post = Comment(message=form.post.data, author=current_user)
+        post = Comment(body=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('profile'), user=current_user)
