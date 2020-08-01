@@ -24,7 +24,7 @@
                 </ul>
                 <hr class="d-sm-none">
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 {% if form %}
                     {{ wtf.quick_form(form) }}
                     <br>
@@ -34,7 +34,7 @@
                 {% endfor %}
 
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <h4>Suggested Connections</h4>
                 <br>
                 {% for person in post_conn %}
@@ -42,7 +42,7 @@
                         {% if not person.is_requested(current_user) %}
                             <form action="{{ url_for('send_request', username=person.username) }}" method="post">
                                 <ul class="list-group" style="width: 16rem;">
-                                    <li class="list-group-item d-flex justify-content-end"><img src="{{ user.avatar(40) }}" class="rounded-circle"> {{ person.username }}
+                                    <li class="list-group-item d-flex justify-content-end"><img src="{{ user.avatar(40) }}" class="rounded-circle">  {{ person.username }}
                                         {{ form.hidden_tag() }}
                                         <p>&nbsp;</p>
                                         {{ form.submit(value='Send Request') }}
