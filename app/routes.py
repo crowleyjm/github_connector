@@ -197,7 +197,9 @@ def help_page():
 def about():
     return render_template('about.html')
 
-@app.route('/explore')
+@app.route('/profile')
 @login_required
 def explore():
-    return render_template('explore.html')
+    return render_template('profile.html')
+
+
