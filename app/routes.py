@@ -216,7 +216,7 @@ def profile():
         if posts.has_prev else None
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url, user=current_user)
 
 
 
