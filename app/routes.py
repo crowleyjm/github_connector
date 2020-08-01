@@ -206,8 +206,6 @@ def profile():
         post = Comment(body=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        db.session.query(Comment).delete()
-        db.session.commit()
         return redirect(url_for('profile'))
     page = request.args.get('page', 1, type=int)
     posts = current_user.connected_posts().order_by(Comment.date_posted.desc()).paginate(
