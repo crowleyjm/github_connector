@@ -36,7 +36,7 @@ class Comment(db.Model):
             return ''
 
     def __repr__(self):
-        return self.message
+        return '<Post {}>'.format(self.message)
 
     def __init__(self, message, user_id):
         self.message = message
