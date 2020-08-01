@@ -1,48 +1,47 @@
-
 {% extends "base.html" %}
 
 {% block content %}
-<br>
-<div class="card border-dark p-3 mb-2 bg-light text-dark mx-auto text-center" style="width: 40rem;">
-  <div class="card-body">
+    <br>
+    <div class="card border-dark p-3 mb-2 bg-light text-dark mx-auto text-center" style="width: 40rem;">
+    <div class="card-body">
     <h1>Register</h1>
-	<br>
+    <br>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
             {{ form.username.label }}<br>
             {{ form.username(size=32) }}<br>
             {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.email.label }}<br>
             {{ form.email(size=32) }}<br>
             {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}<br>
             {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
             {{ form.password2.label }}<br>
             {{ form.password2(size=32) }}<br>
             {% for error in form.password2.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-		<br>
+        <br>
         <p>{{ form.submit() }}</p>
-		<br>
-		<a href="{{ url_for('help_page') }}" class="card-link">Help</a>
-		<br>
+        <br>
+        <a href="{{ url_for('help_page') }}" class="card-link">Help</a>
+        <br>
     </form>
-  <div>
-</div>
+    <div>
+    </div>
 {% endblock %}

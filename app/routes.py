@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -197,7 +197,54 @@ def help_page():
 def about():
     return render_template('about.html')
 
-@app.route('/explore')
+
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
-def explore():
-    return render_template('explore.html')
+def profile():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Comment(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    page = request.args.get('page', 1, type=int)
+    posts = current_user.connected_posts().order_by(Comment.date_posted.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('profile', page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('profile', page=posts.prev_num) \
+        if posts.has_prev else None
+
+    user_languages = current_user.languages
+    lang_list = []
+
+    ordered_lang = collections.OrderedDict(sorted(user_languages.items(), key=lambda x: x[1], reverse=True))
+
+    for key in ordered_lang:
+        lang_list.append(key)
+
+    len_lang = len(lang_list)
+    conn_page = request.args.get('conn_page', 1, type=int)
+
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
+    else:
+        favorite_lang = lang_list[0]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).paginate(conn_page,5)
+
+    conn_form = ConnectionRequestForm()
+
+    # conn_posts = people.paginate(
+    #     conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+    conn_next_url = url_for('profile', conn_page=people.next_num) \
+        if people.has_next else None
+    conn_prev_url = url_for('profile', conn_page=people.prev_num) \
+        if people.has_prev else None
+
+    return render_template('profile.html', title='Home', form=form,
+                           posts=posts.items, next_url=next_url,
+                           prev_url=prev_url, user=current_user, form_conn=conn_form,
+                           post_conn=people.items, next_url_conn=conn_next_url,
+                           prev_url_conn=conn_prev_url)
+
+
