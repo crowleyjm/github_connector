@@ -10,7 +10,7 @@
                 <div><img src="{{ user.avatar(256) }}" class="rounded-circle"></div>
                 <h5>Some text about me in culpa qui officia deserunt mollit anim..</h5>
                 <h3>Languages: </h3>
-                <h6>{% for key, value in user.languages.items() %} {{ key }} {% endfor %}</h6>
+                <h6>{% for key, value in user.languages.items() %} {{ key }}, {% endfor %}</h6>
                 <p>Lorem ipsum dolor sit ame.</p>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
