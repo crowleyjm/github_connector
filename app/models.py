@@ -91,7 +91,9 @@ class User(UserMixin, db.Model):
     def get_requests(self):
         requests = User.query.join(connections, (
                 connections.c.recipient_id == self.id)).filter(
-                connections.c.sender_id == User.id)
+                connections.c.sender_id == User.id).filter(
+                connections.c.are_connected == "false"
+                )
         return requests
 
     def is_connected(self, users):
@@ -114,6 +116,7 @@ class User(UserMixin, db.Model):
         db.session.execute(update)
         request = db.session.query(connections).filter(connections.c.recipient_id == self.id, connections.c.sender_id == users.id).first()
         print(request)
+
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
