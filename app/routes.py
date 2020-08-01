@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm
-from app.models import User, Post
+from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
@@ -25,7 +25,7 @@ def delete_comment():
 
     comment_id = request.args.get("comment_id", 0, type=int)
 
-    comment = Post.query.get(comment_id)
+    comment = Comment.query.get(comment_id)
     if comment:
         db.session.delete(comment)
         db.session.commit()
@@ -43,12 +43,12 @@ def user_feed():
 
     if form.validate_on_submit():
         user_id = current_user.id
-        comment = Post(message=form.message.data, user_id=user_id)
+        comment = Comment(message=form.message.data, user_id=user_id)
         db.session.add(comment)
         db.session.commit()
 
     page = request.args.get('page', 1, type=int)
-    comments = Post.query.order_by(Post.date_posted.desc()).paginate(
+    comments = Comment.query.order_by(Comment.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False
     )
 
@@ -203,10 +203,10 @@ def about():
 def profile():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(message=form.post.data, author=current_user)
+        post = Comment(message=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile'), user=current_user)
     page = request.args.get('page', 1, type=int)
     posts = current_user.connected_posts().paginate(
         page, app.config['POSTS_PER_PAGE'], False)
@@ -216,5 +216,10 @@ def profile():
         if posts.has_prev else None
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url, user=current_user)
+
+
+
+    return render_template('profile.html', user=current_user)
+
 
