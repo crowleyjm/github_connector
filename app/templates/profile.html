@@ -66,8 +66,8 @@
                     {% if not current_user.is_requested(person) %}
                         {% if not person.is_requested(current_user) %}
                             <form action="{{ url_for('send_request', username=person.username) }}" method="post">
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex justify-content-end"><img
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><img
                                             src="{{ person.avatar(30) }}" class="rounded-circle"> {{ person.username }}
                                         {{ form.hidden_tag() }}
                                         <p>&nbsp;</p>
