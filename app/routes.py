@@ -135,7 +135,7 @@ def home():
     if current.github is None:
         github_account = account_info_json['login']
         current.github = github_account
-        db.session.commit
+        db.session.commit()
 
     return redirect(url_for('profile'))
 
@@ -248,8 +248,7 @@ def profile():
 
     conn_form = ConnectionRequestForm()
 
-    # conn_posts = people.paginate(
-    #     conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+
     conn_next_url = url_for('profile', conn_page=people.next_num) \
         if people.has_next else None
     conn_prev_url = url_for('profile', conn_page=people.prev_num) \
