@@ -214,8 +214,38 @@ def profile():
         if posts.has_next else None
     prev_url = url_for('profile', page=posts.prev_num) \
         if posts.has_prev else None
+
+    user_languages = current_user.languages
+    lang_list = []
+
+    ordered_lang = collections.OrderedDict(sorted(user_languages.items(), key=lambda x: x[1], reverse=True))
+
+    for key in ordered_lang:
+        lang_list.append(key)
+
+    len_lang = len(lang_list)
+
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).all()
+    else:
+        favorite_lang = lang_list[0]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+
+    requests = current_user.get_requests()
+    conn_form = ConnectionRequestForm()
+
+    conn_page = request.args.get('conn_page', 1, type=int)
+    conn_posts = people.paginate(
+        conn_page, app.config['CONNECTIONS_PER_PAGE'], False)
+    conn_next_url = url_for('profile', conn_page=conn_posts.next_num) \
+        if conn_posts.has_next else None
+    conn_prev_url = url_for('profile', conn_page=conn_posts.prev_num) \
+        if conn_posts.has_prev else None
+
     return render_template('profile.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
-                           prev_url=prev_url, user=current_user)
+                           prev_url=prev_url, user=current_user, form_conn=conn_form,
+                           post_conn=conn_posts.items, next_url_conn=conn_next_url,
+                           prev_url_conn=conn_prev_url)
 
 
