@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     github = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Comment', backref='author', lazy='dynamic')
+    posts = db.relationship('Comment', backref='author', lazy='dynamic', cascade='all, delete')
     languages = db.Column(JSONB, default=None)
     connected = db.relationship(
         'User', secondary=connections,
@@ -102,11 +102,11 @@ class User(UserMixin, db.Model):
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
 
     def accept_request(self, users):
-        
+
         update = connections.update().where(
             connections.c.recipient_id == self.id).where(
             connections.c.sender_id == users.id).values(are_connected = True)
-            
+
         db.session.execute(update)
 
     def avatar(self, size):
@@ -123,5 +123,3 @@ class User(UserMixin, db.Model):
             connections.c.recipient_id == self.id)
         own = Comment.query.filter_by(user_id=self.id)
         return connected_one.union(own).union(connected_two).order_by(Comment.date_posted.desc())
-
-

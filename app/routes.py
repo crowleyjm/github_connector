@@ -259,5 +259,3 @@ def profile():
                            prev_url=prev_url, user=current_user, form_conn=conn_form,
                            post_conn=people.items, next_url_conn=conn_next_url,
                            prev_url_conn=conn_prev_url)
-
-
