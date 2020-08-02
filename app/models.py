@@ -111,9 +111,9 @@ class User(UserMixin, db.Model):
 
     def decline_request(self, users):
 
-        update = connections.update().where(
+        update = connections.delete().where(
             connections.c.recipient_id == self.id).where(
-            connections.c.sender_id == users.id).values(are_connected = False)
+            connections.c.sender_id == users.id)
 
         db.session.execute(update)
     
