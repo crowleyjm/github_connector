@@ -109,6 +109,14 @@ class User(UserMixin, db.Model):
             
         db.session.execute(update)
 
+    def decline_request(self, users):
+
+        update = connections.update().where(
+            connections.c.recipient_id == self.id).where(
+            connections.c.sender_id == users.id).values(are_connected = False)
+
+        db.session.execute(update)
+    
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
