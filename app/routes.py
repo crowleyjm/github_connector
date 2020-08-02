@@ -204,11 +204,11 @@ def accept_request(username):
 @app.route('/connections/decline_request/<username>', methods=['POST'])
 @login_required
 def decline_request(username):
-user = User.query.filter_by(username=username).first()
-current_user.decline_request(user)
-db.session.commit()
-flash('Connection request declined!')
-return redirect(url_for('connections', username=username))
+    user = User.query.filter_by(username=username).first()
+    current_user.decline_request(user)
+    db.session.commit()
+    flash('Connection request declined!')
+    return redirect(url_for('connections', username=username))
 
 @app.route('/help')
 def help_page():
