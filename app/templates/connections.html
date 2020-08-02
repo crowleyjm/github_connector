@@ -73,7 +73,8 @@
                                         {{ form.submit(value='Accept') }}
                                     </form>
                                     <p>&nbsp;</p>
-                                    <form action=method="post">
+                                    <form action="{{ url_for('decline_request', username=person.username) }}"
+                                          method="post">
                                         {{ form.submit(value='Decline') }}
                                     </form>
                                 </li>
