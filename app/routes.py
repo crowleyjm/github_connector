@@ -269,7 +269,7 @@ def profile():
                            prev_url_conn=conn_prev_url)
 
 
-@app.route('/profile/<user>', methods=['GET', 'POST'])
+@app.route('/profile/<req_user>', methods=['GET', 'POST'])
 @login_required
 def other_profile(req_user):
     page = request.args.get('page', 1, type=int)
