@@ -269,10 +269,12 @@ def profile():
                            prev_url_conn=conn_prev_url)
 
 
-@app.route('/profile/<req_user>', methods=['GET', 'POST'])
+@app.route('/profile/<username>', methods=['GET', 'POST'])
 @login_required
-def other_profile(req_user):
+def other_profile(username):
     page = request.args.get('page', 1, type=int)
+
+    req_user = User.query.filter_by(username=username).first_or_404()
 
     posts = req_user.own_posts().order_by(Comment.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False)
