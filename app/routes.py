@@ -262,10 +262,28 @@ def profile():
     conn_prev_url = url_for('profile', conn_page=people.prev_num) \
         if people.has_prev else None
 
-    return render_template('profile.html', title='Home', form=form,
+    return render_template('profile.html', title='Profile', form=form,
                            posts=posts.items, next_url=next_url,
                            prev_url=prev_url, user=current_user, form_conn=conn_form,
                            post_conn=people.items, next_url_conn=conn_next_url,
                            prev_url_conn=conn_prev_url)
+
+
+@app.route('/profile/<user>', methods=['GET', 'POST'])
+@login_required
+def other_profile(user):
+    page = request.args.get('page', 1, type=int)
+
+    posts = user.connected_posts().order_by(Comment.date_posted.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('profile', page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('profile', page=posts.prev_num) \
+        if posts.has_prev else None
+
+    return render_template('other_profiles.html', title=user + '\'s' + "Profile Page")
+
+
+
 
 
