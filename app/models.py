@@ -57,7 +57,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
-    github = db.Column(db.String(64), index=True, unique=True)
+    github = db.Column(db.String(64), index=True, unique=False)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
     posts = db.relationship('Comment', backref='author', lazy='dynamic')
