@@ -271,17 +271,19 @@ def profile():
 
 @app.route('/profile/<user>', methods=['GET', 'POST'])
 @login_required
-def other_profile(user):
+def other_profile(req_user):
     page = request.args.get('page', 1, type=int)
 
-    posts = user.connected_posts().order_by(Comment.date_posted.desc()).paginate(
+    posts = req_user.own_posts().order_by(Comment.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('profile', page=posts.next_num) \
+    next_url = url_for('other_profile', page=posts.next_num) \
         if posts.has_next else None
-    prev_url = url_for('profile', page=posts.prev_num) \
+    prev_url = url_for('other_profile', page=posts.prev_num) \
         if posts.has_prev else None
 
-    return render_template('other_profiles.html', title=user + '\'s' + "Profile Page")
+    return render_template('other_profiles.html', title=req_user + '\'s' + "Profile Page",
+                           posts=posts.items, next_url=next_url,
+                           prev_url=prev_url, user=req_user)
 
 
 
