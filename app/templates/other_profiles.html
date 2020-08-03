@@ -49,10 +49,10 @@
                 <hr class="d-sm-none">
             </div>
             <div class="col-sm-5">
-                {% if form %}
-                    {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
-                    <br>
-                {% endif %}
+{#                {% if form %}#}
+{#                    {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}#}
+{#                    <br>#}
+{#                {% endif %}#}
                 {% for post in posts %}
                     {% include '_post.html' %}
                 {% endfor %}
@@ -72,36 +72,36 @@
             </div>
             <div class="col-sm-3">
                 <h4>Suggested Connections</h4>
-                <br>
-                {% for person in post_conn %}
-                    {% if not current_user.is_requested(person) %}
-                        {% if not person.is_requested(current_user) %}
-                            <form action="{{ url_for('send_request', username=person.username) }}" method="post">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <img src="{{ person.avatar(30) }}" class="rounded-circle">
-                                        {{ person.username }}
-                                        {{ form.hidden_tag() }}
-                                        <br>
-                                        <br>
-                                        {{ form.submit(value='Send Request', class_='btn btn-outline-dark') }}
-                                    </li>
-                                </ul>
-                            </form>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-                <ul class="nav nav-pills justify-content-center">
-                    <li class="previous{% if not prev_url_conn %} disabled{% endif %}">
-                        <a class="nav-item nav-link" href="{{ prev_url_conn or '#' }}">
-                            <span aria-hidden="true"></span> Newer Suggestions
-                        </a>
-                    </li>
-                    <li class="next{% if not next_url_conn %} disabled{% endif %}">
-                        <a class="nav-item nav-link" href="{{ next_url_conn or '#' }}"> Older Suggestions <span aria-hidden="true"></span>
-                        </a>
-                    </li>
-                </ul>
+{#                <br>#}
+{#                {% for person in post_conn %}#}
+{#                    {% if not current_user.is_requested(person) %}#}
+{#                        {% if not person.is_requested(current_user) %}#}
+{#                            <form action="{{ url_for('send_request', username=person.username) }}" method="post">#}
+{#                                <ul class="list-group">#}
+{#                                    <li class="list-group-item">#}
+{#                                        <img src="{{ person.avatar(30) }}" class="rounded-circle">#}
+{#                                        {{ person.username }}#}
+{#                                        {{ form.hidden_tag() }}#}
+{#                                        <br>#}
+{#                                        <br>#}
+{#                                        {{ form.submit(value='Send Request', class_='btn btn-outline-dark') }}#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </form>#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#                <ul class="nav nav-pills justify-content-center">#}
+{#                    <li class="previous{% if not prev_url_conn %} disabled{% endif %}">#}
+{#                        <a class="nav-item nav-link" href="{{ prev_url_conn or '#' }}">#}
+{#                            <span aria-hidden="true"></span> Newer Suggestions#}
+{#                        </a>#}
+{#                    </li>#}
+{#                    <li class="next{% if not next_url_conn %} disabled{% endif %}">#}
+{#                        <a class="nav-item nav-link" href="{{ next_url_conn or '#' }}"> Older Suggestions <span aria-hidden="true"></span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                </ul>#}
 
             </div>
         </div>
