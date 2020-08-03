@@ -10,7 +10,7 @@
                         <br>
                         {% for person in usernames %}
                             {% if current_user.is_connected(person) %}
-                                <form action="{{ url_for('other_profiles', username=person.username) }}"
+                                <form action="{{ url_for('other_profile', username=person.username) }}"
                                       method="post">
                                     <ul class="list-group" style="width: 16rem;">
                                         <li class="list-group-item d-flex justify-content-end">{{ person.username }}
