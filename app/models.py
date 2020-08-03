@@ -122,8 +122,8 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
-    def own_posts(self, user_viewed):
-        own = Comment.query.filter_by(user_id=user_viewed.id)
+    def own_posts(self):
+        own = Comment.query.filter_by(user_id=self.id)
 
         return own.order_by(Comment.date_posted.desc())
 
