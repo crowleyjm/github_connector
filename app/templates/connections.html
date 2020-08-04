@@ -10,7 +10,8 @@
                         <br>
                         {% for person in usernames %}
                             {% if current_user.is_connected(person) %}
-                                <form method="post">
+                                <form action="{{ url_for('other_profile', username=person.username) }}"
+                                      method="get">
                                     <ul class="list-group" style="width: 16rem;">
                                         <li class="list-group-item d-flex justify-content-end">{{ person.username }}
                                             {{ form.hidden_tag() }}
@@ -20,7 +21,8 @@
                                     </ul>
                                 </form>
                             {% elif person.is_connected(current_user) %}
-                                <form method="post">
+                                <form action="{{ url_for('other_profile', username=current_user.username) }}"
+                                      method="get">
                                     <ul class="list-group" style="width: 16rem;">
                                         <li class="list-group-item d-flex justify-content-end">{{ person.username }}
                                             {{ form.hidden_tag() }}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container" style="margin-top:30px">
+        <div class="row">
+            <div class="col-sm-4">
+                <h5>{{ user.username }}</h5>
+                <div><img src="{{ user.avatar(96) }}" class="rounded-circle"></div>
+                <h5>Connected GitHub Account: {{ user.github }}</h5>
+                <h3>Languages: </h3>
+                <h6>{% for key, value in user.languages.items() %} {{ key }}| {% endfor %}</h6>
+                <br>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark" href="" role="button">Remove Connection</a>
+                    </li>
+                    <br>
+                <hr class="d-sm-none">
+            </div>
+            <div class="col-sm-5">
+                {% for post in posts %}
+                    {% include '_post.html' %}
+                {% endfor %}
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="previous{% if not prev_url %} disabled{% endif %}">
+                        <a class="nav-item nav-link" href="{{ prev_url or '#' }}">
+                            <span aria-hidden="true"></span> Newer posts
+                        </a>
+                    </li>
+                    <li class="next{% if not next_url %} disabled{% endif %}">
+                        <a class="nav-item nav-link" href="{{ next_url or '#' }}"> Older posts <span aria-hidden="true"></span>
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+            <div class="col-sm-3">
+                <h4>Repositories</h4>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
