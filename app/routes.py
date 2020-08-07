@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -8,7 +8,6 @@ from flask_dance.contrib.github import github
 from app.api.users import user_get_lang
 from flask import session, request
 import collections
-
 
 
 @app.route('/logout')
@@ -187,6 +186,7 @@ def send_request(username):
     else:
         return redirect(url_for('profile'))
 
+
 @app.route('/connections/accept_request/<username>', methods=['POST'])
 @login_required
 def accept_request(username):
@@ -196,6 +196,7 @@ def accept_request(username):
     flash('Connection request accepted!')
     return redirect(url_for('connections', username=username))
 
+
 @app.route('/connections/decline_request/<username>', methods=['POST'])
 @login_required
 def decline_request(username):
@@ -204,6 +205,19 @@ def decline_request(username):
     db.session.commit()
     flash('Connection request declined!')
     return redirect(url_for('connections', username=username))
+
+
+@app.route('/connections/remove_connection/<username>', methods=['POST'])
+@login_required
+def remove_connection(username):
+    user = User.query.filter_by(username=username).first()
+    current_user.remove_connection_recipient(user)
+    db.session.commit()
+    current_user.remove_connection_sender(user)
+    db.session.commit()
+    flash('Connection removed!')
+    return redirect(url_for('connections', username=username))
+
 
 @app.route('/help')
 def help_page():
@@ -267,6 +281,7 @@ def profile():
 @app.route('/profile/<username>', methods=['GET', 'POST'])
 @login_required
 def other_profile(username):
+    form = ConnectionRemoveForm()
     page = request.args.get('page', 1, type=int)
 
     req_user = User.query.filter_by(username=username).first_or_404()
@@ -280,7 +295,7 @@ def other_profile(username):
 
     return render_template('other_profiles.html', title="Profile Page",
                            posts=posts.items, next_url=next_url,
-                           prev_url=prev_url, user=req_user)
+                           prev_url=prev_url, user=req_user, form=form)
 
 
 

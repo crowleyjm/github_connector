@@ -101,20 +101,28 @@ class User(UserMixin, db.Model):
         return self.connected.filter(
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
 
-    def accept_request(self, users):
-        
-        update = connections.update().where(
-            connections.c.recipient_id == self.id).where(
-            connections.c.sender_id == users.id).values(are_connected = True)
-            
-        db.session.execute(update)
-
-    def decline_request(self, users):
-
+    def remove_connection_recipient(self, users):
         update = connections.delete().where(
             connections.c.recipient_id == self.id).where(
             connections.c.sender_id == users.id)
+        db.session.execute(update)
 
+    def remove_connection_sender(self, users):
+        update = connections.delete().where(
+            connections.c.recipient_id == users.id).where(
+            connections.c.sender_id == self.id)
+        db.session.execute(update)
+
+    def accept_request(self, users):
+        update = connections.update().where(
+            connections.c.recipient_id == self.id).where(
+            connections.c.sender_id == users.id).values(are_connected = True)
+        db.session.execute(update)
+
+    def decline_request(self, users):
+        update = connections.delete().where(
+            connections.c.recipient_id == self.id).where(
+            connections.c.sender_id == users.id)
         db.session.execute(update)
     
     def avatar(self, size):
@@ -124,7 +132,6 @@ class User(UserMixin, db.Model):
 
     def own_posts(self):
         own = Comment.query.filter_by(user_id=self.id)
-
         return own.order_by(Comment.date_posted.desc())
 
     def connected_posts(self):

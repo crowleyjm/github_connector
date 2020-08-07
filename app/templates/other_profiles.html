@@ -13,7 +13,9 @@
                 <br>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <a class="btn btn-outline-dark" href="" role="button">Remove Connection</a>
+                        <form action="{{ url_for('remove_connection', username=user.username) }}" method="post">
+                            {{ form.submit(value='Remove Connection', class_='btn btn-outline-dark') }}
+                        </form>
                     </li>
                     <br>
                 <hr class="d-sm-none">

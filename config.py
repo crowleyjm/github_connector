@@ -1,7 +1,7 @@
 import os
 
-LOCAL_DEBUG = False
-
+LOCAL_DEBUG = True
+# LOCAL_DEBUG = False
 
 class Config(object):
     POSTS_PER_PAGE = 10
@@ -10,7 +10,8 @@ class Config(object):
 
     DATABASE_URL = None
     if LOCAL_DEBUG:
-        DATABASE_URL = "postgres://test_user:N2JdjiKyfp@127.0.0.1/github_connector"
+        DATABASE_URL = "postgresql://postgres:se2020@localhost:5432/github_connector"
+        # DATABASE_URL = "postgres://test_user:N2JdjiKyfp@127.0.0.1/github_connector"
     else:
         DATABASE_URL = "postgres://ovsoaajreppuyb:84014559fb7014e2af3c263d4e30f1afb37196a7d511cd882df4a8302ba1891d@ec2-34-224-229-81.compute-1.amazonaws.com:5432/dfq49p3g24hncm"
 
