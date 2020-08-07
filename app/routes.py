@@ -162,12 +162,12 @@ def connections():
         lang_list.append(key)
 
     len_lang = len(lang_list)
-
-    if len_lang == 0:
-        people = User.query.filter(User.username != current_user.username).all()
-    else:
-        favorite_lang = lang_list[0]
-        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+    people = User.query.filter(User.username != current_user.username).all()
+    # if len_lang == 0:
+    #     people = User.query.filter(User.username != current_user.username).all()
+    # else:
+    #     favorite_lang = lang_list[0]
+    #     people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
@@ -180,11 +180,6 @@ def send_request(username):
     form = ConnectionRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
-        current_user.request(user)
-        db.session.commit()
-        if user is None:
-            flash('User {} not found.'.format(username))
-            return redirect(url_for('profile'))
         current_user.request(user)
         db.session.commit()
         flash('connection request sent to {}!'.format(username))
@@ -247,12 +242,12 @@ def profile():
 
     len_lang = len(lang_list)
     conn_page = request.args.get('conn_page', 1, type=int)
-
-    if len_lang == 0:
-        people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
-    else:
-        favorite_lang = lang_list[0]
-        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).paginate(conn_page,5)
+    people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
+    # if len_lang == 0:
+    #     people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
+    # else:
+    #     favorite_lang = lang_list[0]
+    #     people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).paginate(conn_page,5)
 
     conn_form = ConnectionRequestForm()
 
