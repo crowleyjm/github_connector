@@ -161,12 +161,11 @@ def connections():
         lang_list.append(key)
 
     len_lang = len(lang_list)
-    people = User.query.filter(User.username != current_user.username).all()
-    # if len_lang == 0:
-    #     people = User.query.filter(User.username != current_user.username).all()
-    # else:
-    #     favorite_lang = lang_list[0]
-    #     people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).all()
+    else:
+        favorite_lang = lang_list[0]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
 
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
@@ -256,15 +255,14 @@ def profile():
 
     len_lang = len(lang_list)
     conn_page = request.args.get('conn_page', 1, type=int)
-    people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
-    # if len_lang == 0:
-    #     people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
-    # else:
-    #     favorite_lang = lang_list[0]
-    #     people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).paginate(conn_page,5)
+
+    if len_lang == 0:
+        people = User.query.filter(User.username != current_user.username).paginate(conn_page, 5)
+    else:
+        favorite_lang = lang_list[0]
+        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).paginate(conn_page,5)
 
     conn_form = ConnectionRequestForm()
-
 
     conn_next_url = url_for('profile', conn_page=people.next_num) \
         if people.has_next else None
