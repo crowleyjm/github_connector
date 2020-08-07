@@ -42,3 +42,7 @@ class PostForm(FlaskForm):
 
 class ConnectionRequestForm(FlaskForm):
     submit = SubmitField('Send Request')
+
+
+class ConnectionRemoveForm(FlaskForm):
+    submit = SubmitField('Remove Connection')
