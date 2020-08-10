@@ -40,5 +40,5 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 
-class ConnectionRequestForm(FlaskForm):
+class ConnectionForm(FlaskForm):
     submit = SubmitField('Send Request')
