@@ -142,8 +142,8 @@ def home():
 @app.route('/delete', methods=['POST'])
 @login_required
 def delete_account():
-    user = User.query.get_or_404(current_user.id)
-    db.session.delete(user)
+    current_user_account = User.query.get_or_404(current_user.id)
+    db.session.delete(current_user_account)
     db.session.commit()
     flash("Your account was successfully deleted")
     return redirect(url_for('login'))
@@ -189,8 +189,8 @@ def send_request(username):
 @app.route('/connections/accept_request/<username>', methods=['POST'])
 @login_required
 def accept_request(username):
-    user = User.query.filter_by(username=username).first()
-    current_user.accept_request(user)
+    connection_sender = User.query.filter_by(username=username).first()
+    current_user.accept_request(connection_sender)
     db.session.commit()
     flash('Connection request accepted!')
     return redirect(url_for('connections', username=username))
