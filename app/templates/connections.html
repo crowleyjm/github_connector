@@ -8,6 +8,10 @@
                     <div class="card-body">
                         <h1 class="card-title">Connections</h1>
                         <br>
+                        <form action ="" method=post>
+                            <input type=text value="">
+                            <input type="submit" value="Search">
+                        </form>
                         {% for person in usernames %}
                             {% if current_user.is_connected(person) %}
                                 <ul class="list-group" style="width: 16rem;">

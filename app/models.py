@@ -97,6 +97,12 @@ class User(UserMixin, db.Model):
                 )
         return requests
 
+    # def search_requests(self, search):
+    #     requests = User.query.join(connections, (
+    #         connections.c.re
+    #     ))
+    #     return requests
+
     def is_connected(self, users):
         return self.connected.filter(
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
