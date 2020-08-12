@@ -97,11 +97,20 @@ class User(UserMixin, db.Model):
                 )
         return requests
 
-    # def search_requests(self, search):
-    #     requests = User.query.join(connections, (
-    #         connections.c.re
-    #     ))
-    #     return requests
+    def search_connections(self, search):
+        connections_received = User.query.join(connections, (
+                connections.c.recipient_id == self.id)).filter(
+                connections.c.sender_id == User.id).filter(
+                connections.c.are_connected == "true"
+                )
+        connections_sent = User.query.join(connections, (
+                connections.c.recipient_id == User.id)).filter(
+                connections.c.sender_id == self.id).filter(
+                connections.c.are_connected == "true"
+                )
+        all_connections = connections_received.union(connections_sent)
+        search_result = all_connections.filter(User.username.contains(search)).all()
+        return search_result
 
     def is_connected(self, users):
         return self.connected.filter(
