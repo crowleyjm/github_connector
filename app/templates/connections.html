@@ -16,12 +16,12 @@
                                           <p>&nbsp;</p>
                                           <form action="{{ url_for('other_profile', username=person.username) }}"
                                                 method="get">
-                                             {{ form.submit(value='View') }}
+                                             {{ form.submit(value='View', class_='btn btn-outline-dark') }}
                                           </form>
                                           <p>&nbsp;</p>
                                           <form action="{{ url_for('remove_connection', username=person.username) }}"
                                                 method="post">
-                                             {{ form.submit(value='Remove') }}
+                                             {{ form.submit(value='Remove', class_='btn btn-outline-dark') }}
                                            </form>
                                     </li>
                                 </ul>
@@ -32,12 +32,12 @@
                                           <p>&nbsp;</p>
                                           <form action="{{ url_for('other_profile', username=person.username) }}"
                                                 method="get">
-                                             {{ form.submit(value='View') }}
+                                             {{ form.submit(value='View', class_='btn btn-outline-dark') }}
                                           </form>
                                           <p>&nbsp;</p>
                                           <form action="{{ url_for('remove_connection', username=person.username) }}"
                                                 method="post">
-                                             {{ form.submit(value='Remove') }}
+                                             {{ form.submit(value='Remove', class_='btn btn-outline-dark') }}
                                            </form>
                                     </li>
                                 </ul>
@@ -60,7 +60,7 @@
                                             <li class="list-group-item d-flex justify-content-end">{{ person.username }}
                                                 {{ form.hidden_tag() }}
                                                 <p>&nbsp;</p>
-                                                {{ form.submit(value='Send Request') }}
+                                                {{ form.submit(value='Send Request', class_='btn btn-outline-dark') }}
                                             </li>
                                         </ul>
                                     </form>
@@ -82,12 +82,12 @@
                                     <p>&nbsp;</p>
                                     <form action="{{ url_for('accept_request', username=person.username) }}"
                                           method="post">
-                                        {{ form.submit(value='Accept') }}
+                                        {{ form.submit(value='Accept', class_='btn btn-outline-dark') }}
                                     </form>
                                     <p>&nbsp;</p>
                                     <form action="{{ url_for('decline_request', username=person.username) }}"
                                           method="post">
-                                        {{ form.submit(value='Decline') }}
+                                        {{ form.submit(value='Decline', class_='btn btn-outline-dark') }}
                                     </form>
                                 </li>
                             </ul>
