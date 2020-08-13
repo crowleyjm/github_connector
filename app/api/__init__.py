@@ -4,7 +4,7 @@ import os
 bp = Blueprint('api', __name__)
 
 
-github_blueprint = make_github_blueprint(client_id=os.environ.get['CLIENT_ID'], client_secret=os.environ.get['CLIENT_SECRET'])
+github_blueprint = make_github_blueprint(client_id=os.environ.ge('CLIENT_ID', None), client_secret=os.environ.get('CLIENT_SECRET', None))
 
 # def create_app(config_class=Config):
 #     app = Flask(__name__)
