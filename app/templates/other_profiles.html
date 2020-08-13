@@ -19,6 +19,7 @@
                     </li>
                     <br>
                     <hr class="d-sm-none">
+                </ul>
             </div>
             <div class="col-sm-5">
                 {% for post in posts %}
@@ -43,13 +44,12 @@
                 <h4>Repositories</h4>
                 <br>
                 {% for key, value in user.repos.items() %}
-                    <form method="post">
+                    <form>
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a class="nav-item nav-link" href="{{ value }}">
                                     <span aria-hidden="true"></span> {{ key }}
                                 </a>
-
                             </li>
                         </ul>
                     </form>
