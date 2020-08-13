@@ -45,8 +45,9 @@
                             <form method="post">
                                 <ul class="list-group">
                                     <li class="list-group-item">
-                                        {{ key }}
-                                        {{ form.hidden_tag() }}
+                        <a class="nav-item nav-link" href="{{ value }}">
+                            <span aria-hidden="true"></span> {{ key }}
+                        </a>
                                         <br>
                                         <br>
                                     </li>
