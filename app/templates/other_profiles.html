@@ -18,7 +18,7 @@
                         </form>
                     </li>
                     <br>
-                <hr class="d-sm-none">
+                    <hr class="d-sm-none">
             </div>
             <div class="col-sm-5">
                 {% for post in posts %}
@@ -31,7 +31,8 @@
                         </a>
                     </li>
                     <li class="next{% if not next_url %} disabled{% endif %}">
-                        <a class="nav-item nav-link" href="{{ next_url or '#' }}"> Older posts <span aria-hidden="true"></span>
+                        <a class="nav-item nav-link" href="{{ next_url or '#' }}"> Older posts <span
+                                aria-hidden="true"></span>
                         </a>
                     </li>
                 </ul>
@@ -42,17 +43,16 @@
                 <h4>Repositories</h4>
                 <br>
                 {% for key, value in user.repos.items() %}
-                            <form method="post">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                        <a class="nav-item nav-link" href="{{ value }}">
-                            <span aria-hidden="true"></span> {{ key }}
-                        </a>
-                                        <br>
-                                        <br>
-                                    </li>
-                                </ul>
-                            </form>
+                    <form method="post">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="nav-item nav-link" href="{{ value }}">
+                                    <span aria-hidden="true"></span> {{ key }}
+                                </a>
+
+                            </li>
+                        </ul>
+                    </form>
                 {% endfor %}
 
             </div>
