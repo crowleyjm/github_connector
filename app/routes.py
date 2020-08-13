@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm, SearchForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -169,7 +169,14 @@ def connections():
     
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
-    return render_template('connections.html', form=form, usernames=people, requests=requests)
+
+    search_form = SearchForm()
+    if search_form.validate_on_submit():
+        search_term = search_form.query.data
+        search_results = current_user.search_connections(search_term)
+        return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form, results=search_results)
+
+    return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form)
 
 @app.route('/connections/send_request/<username>', methods=['POST'])
 @login_required

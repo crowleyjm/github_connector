@@ -48,4 +48,5 @@ class ConnectionRemoveForm(FlaskForm):
     submit = SubmitField('Remove Connection')
 
 class SearchForm(FlaskForm):
-    submit = SubmitField('search', validators=[DataRequired()])
+    query = StringField('Search Connections:', validators=[DataRequired()])
+    submit = SubmitField('Search')
