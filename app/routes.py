@@ -186,6 +186,7 @@ def connections():
 
     return render_template('connections.html', form=form, usernames=people, requests=requests, suggestions=suggestions, search_form=search_form)
 
+
 @app.route('/connections/send_request/<username>', methods=['POST'])
 @login_required
 def send_request(username):

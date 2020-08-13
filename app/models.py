@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     github = db.Column(db.String(64), index=True, unique=False)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Comment', backref='author', lazy='dynamic')
+    posts = db.relationship('Comment', backref='author', lazy='dynamic', cascade='all, delete')
     languages = db.Column(JSONB, default=None)
     repos = db.Column(JSONB, default=None)
     connected = db.relationship(
@@ -149,6 +149,7 @@ class User(UserMixin, db.Model):
     def own_posts(self):
         own = Comment.query.filter_by(user_id=self.id)
         return own.order_by(Comment.date_posted.desc())
+
 
     def connected_posts(self):
         connections_sent_posts = Comment.query.join(
