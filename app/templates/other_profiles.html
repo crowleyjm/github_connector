@@ -44,7 +44,7 @@
                 <h4>Repositories</h4>
                 <br>
                 {% for key, value in user.repos.items() %}
-                    <form>
+{#                    <form>#}
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a class="nav-item nav-link" href="{{ value }}">
@@ -52,11 +52,10 @@
                                 </a>
                             </li>
                         </ul>
-                    </form>
+{#                    </form>#}
                 {% endfor %}
 
             </div>
         </div>
     </div>
-
 {% endblock %}
