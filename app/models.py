@@ -98,6 +98,21 @@ class User(UserMixin, db.Model):
                 )
         return requests
 
+    def search_connections(self, search):
+        connections_received = User.query.join(connections, (
+                connections.c.recipient_id == self.id)).filter(
+                connections.c.sender_id == User.id).filter(
+                connections.c.are_connected == "true"
+                )
+        connections_sent = User.query.join(connections, (
+                connections.c.recipient_id == User.id)).filter(
+                connections.c.sender_id == self.id).filter(
+                connections.c.are_connected == "true"
+                )
+        all_connections = connections_received.union(connections_sent)
+        search_result = all_connections.filter(User.username.contains(search)).all()
+        return search_result
+
     def is_connected(self, users):
         return self.connected.filter(
             connections.c.recipient_id == users.id).filter(connections.c.are_connected == "true").count() > 0.
@@ -115,10 +130,10 @@ class User(UserMixin, db.Model):
         db.session.execute(update)
 
     def accept_request(self, users):
-        update = connections.update().where(
+        update_statement = connections.update().where(
             connections.c.recipient_id == self.id).where(
             connections.c.sender_id == users.id).values(are_connected = True)
-        db.session.execute(update)
+        db.session.execute(update_statement)
 
     def decline_request(self, users):
         update = connections.delete().where(
@@ -136,13 +151,13 @@ class User(UserMixin, db.Model):
         return own.order_by(Comment.date_posted.desc())
 
     def connected_posts(self):
-        connected_one = Comment.query.join(
+        connections_sent_posts = Comment.query.join(
             connections, (connections.c.recipient_id == Comment.user_id)).filter(
             connections.c.sender_id == self.id)
-        connected_two = Comment.query.join(
+        connections_received_posts = Comment.query.join(
             connections, (connections.c.sender_id == Comment.user_id)).filter(
             connections.c.recipient_id == self.id)
-        own = Comment.query.filter_by(user_id=self.id)
-        return connected_one.union(own).union(connected_two).order_by(Comment.date_posted.desc())
+        own_posts = Comment.query.filter_by(user_id=self.id)
+        return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Comment.date_posted.desc())
 
 

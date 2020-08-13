@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm
+from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm, SearchForm
 from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
@@ -147,8 +147,8 @@ def home():
 @app.route('/delete', methods=['POST'])
 @login_required
 def delete_account():
-    user = User.query.get_or_404(current_user.id)
-    db.session.delete(user)
+    current_user_account = User.query.get_or_404(current_user.id)
+    db.session.delete(current_user_account)
     db.session.commit()
     flash("Your account was successfully deleted")
     return redirect(url_for('login'))
@@ -171,11 +171,17 @@ def connections():
     else:
         favorite_lang = lang_list[0]
         people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
-
+    
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
-    return render_template('connections.html', form=form, usernames=people, requests=requests)
 
+    search_form = SearchForm()
+    if search_form.validate_on_submit():
+        search_term = search_form.query.data
+        search_results = current_user.search_connections(search_term)
+        return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form, results=search_results)
+
+    return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form)
 
 @app.route('/connections/send_request/<username>', methods=['POST'])
 @login_required
@@ -194,8 +200,8 @@ def send_request(username):
 @app.route('/connections/accept_request/<username>', methods=['POST'])
 @login_required
 def accept_request(username):
-    user = User.query.filter_by(username=username).first()
-    current_user.accept_request(user)
+    connection_sender = User.query.filter_by(username=username).first()
+    current_user.accept_request(connection_sender)
     db.session.commit()
     flash('Connection request accepted!')
     return redirect(url_for('connections', username=username))
