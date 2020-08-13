@@ -62,6 +62,7 @@ class User(UserMixin, db.Model):
     authentication = db.Column(db.Boolean, default=False)
     posts = db.relationship('Comment', backref='author', lazy='dynamic')
     languages = db.Column(JSONB, default=None)
+    repos = db.Column(JSONB, default=None)
     connected = db.relationship(
         'User', secondary=connections,
         primaryjoin=(connections.c.sender_id == id),
