@@ -5,7 +5,7 @@ from app.models import User, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
-from app.api.users import user_get_lang
+from app.api.users import user_get_lang, user_get_repos
 from flask import session, request
 import collections
 
@@ -134,6 +134,11 @@ def home():
     if current.github is None:
         github_account = account_info_json['login']
         current.github = github_account
+        db.session.commit()
+
+    if current.repos is None:
+        account_repos = user_get_repos(account_info_json['login'], github.token['access_token'])
+        current.repos = account_repos
         db.session.commit()
 
     return redirect(url_for('profile'))
@@ -290,6 +295,7 @@ def other_profile(username):
         if posts.has_next else None
     prev_url = url_for('other_profile', page=posts.prev_num) \
         if posts.has_prev else None
+
 
     return render_template('other_profiles.html', title="Profile Page",
                            posts=posts.items, next_url=next_url,

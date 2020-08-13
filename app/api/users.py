@@ -33,6 +33,26 @@ def user_get_lang(git_name, token):
             else:
                 language_dict[lang_name] += new_val
 
-
     return language_dict
 
+
+@bp.route('/<git_name>/repositories')
+def user_get_repos(git_name, token):
+    github_url = 'https://api.github.com/users/' + git_name + '/repos'
+    payload = {}
+    headers = {
+        'Authorization': 'Bearer ' + token
+    }
+
+    response = requests.request("GET", github_url, headers=headers, data=payload)
+    repos_dict = {}
+
+    new_bytes = response.content
+    new_json = json.loads(new_bytes)
+
+    for i in range(len(new_json)):
+        html_url = new_json[i]["html_url"]
+        name_url = new_json[i]["name"]
+        repos_dict[name_url] = html_url
+
+    return repos_dict
