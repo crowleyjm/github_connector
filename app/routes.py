@@ -166,11 +166,10 @@ def connections():
     else:
         favorite_lang = lang_list[0]
         people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
-
+    
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
     return render_template('connections.html', form=form, usernames=people, requests=requests)
-
 
 @app.route('/connections/send_request/<username>', methods=['POST'])
 @login_required
