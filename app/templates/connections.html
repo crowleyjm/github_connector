@@ -73,7 +73,7 @@
                     <div class="card-body">
                         <h1 class="card-title">Suggested</h1>
                         <br>
-                        {% for person in usernames %}
+                        {% for person in suggestions %}
                             {% if not current_user.is_requested(person) %}
                                 {% if not person.is_requested(current_user) %}
                                     <form action="{{ url_for('send_request', username=person.username) }}"
