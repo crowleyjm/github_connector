@@ -150,6 +150,7 @@ class User(UserMixin, db.Model):
         own = Comment.query.filter_by(user_id=self.id)
         return own.order_by(Comment.date_posted.desc())
 
+
     def connected_posts(self):
         connections_sent_posts = Comment.query.join(
             connections, (connections.c.recipient_id == Comment.user_id)).filter(
