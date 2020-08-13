@@ -23,6 +23,8 @@ class Comment(db.Model):
     date_posted = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
+    likes = db.relationship('CommentLike', backref='post', lazy='dynamic')
+
 
     def get_user(self):
         return User.query.get(
@@ -68,6 +70,10 @@ class User(UserMixin, db.Model):
         primaryjoin=(connections.c.sender_id == id),
         secondaryjoin=(connections.c.recipient_id == id),
         backref=db.backref('connections', lazy='dynamic'), lazy='dynamic')
+    liked = db.relationship(
+        'CommentLike',
+        foreign_keys='CommentLike.user_id',
+        backref='user', lazy='dynamic')
 
     def __init__(self, username, email):
         self.username = username
@@ -150,7 +156,6 @@ class User(UserMixin, db.Model):
         own = Comment.query.filter_by(user_id=self.id)
         return own.order_by(Comment.date_posted.desc())
 
-
     def connected_posts(self):
         connections_sent_posts = Comment.query.join(
             connections, (connections.c.recipient_id == Comment.user_id)).filter(
@@ -161,4 +166,26 @@ class User(UserMixin, db.Model):
         own_posts = Comment.query.filter_by(user_id=self.id)
         return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Comment.date_posted.desc())
 
+    def like_post(self, post):
+        if not self.has_liked_post(post):
+            like = CommentLike(user_id=self.id, post_id=post.id)
+            db.session.add(like)
 
+    def unlike_post(self, post):
+        if self.has_liked_post(post):
+            CommentLike.query.filter_by(
+                user_id=self.id,
+                post_id=post.id).delete()
+
+    def has_liked_post(self, post):
+        return CommentLike.query.filter(
+            CommentLike.user_id == self.id,
+            CommentLike.post_id == post.id).count() > 0
+
+
+class CommentLike(db.Model):
+    __tablename__ = 'comment_like'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
