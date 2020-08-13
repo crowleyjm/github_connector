@@ -176,6 +176,7 @@ def connections():
     form = ConnectionRequestForm()
 
     search_form = SearchForm()
+
     if search_form.validate_on_submit():
         search_term = search_form.query.data
         search_results = current_user.search_connections(search_term)
