@@ -52,7 +52,7 @@ def user_get_repos(git_name, token):
 
     for i in range(len(new_json)):
         html_url = new_json[i]["html_url"]
-        name_url = new_json[i]["owner"]["name"]
+        name_url = new_json[i]["name"]
         repos_dict[name_url] = html_url
 
     return repos_dict
