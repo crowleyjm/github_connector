@@ -43,7 +43,7 @@
             <div class="col-sm-3">
                 <h4>Repositories</h4>
                 <br>
-            {% if user.repos is None %}
+            {% if user.repos == None %}
             {% else %}
                 {% for key, value in user.repos.items() %}
                     <form>
