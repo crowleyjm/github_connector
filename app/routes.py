@@ -166,12 +166,14 @@ def connections():
         lang_list.append(key)
 
     len_lang = len(lang_list)
+
     if len_lang == 0:
-        people = User.query.filter(User.username != current_user.username).all()
+        suggestions = User.query.filter(User.username != current_user.username).all()
     else:
         favorite_lang = lang_list[0]
-        people = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
+        suggestions = User.query.filter(User.username != current_user.username, User.languages.has_key(favorite_lang)).all()
     
+    people = User.query.filter(User.username != current_user.username).all()
     requests = current_user.get_requests()
     form = ConnectionRequestForm()
 
@@ -179,9 +181,9 @@ def connections():
     if search_form.validate_on_submit():
         search_term = search_form.query.data
         search_results = current_user.search_connections(search_term)
-        return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form, results=search_results)
+        return render_template('connections.html', form=form, usernames=people, suggestions=suggestions, requests=requests, search_form=search_form, results=search_results)
 
-    return render_template('connections.html', form=form, usernames=people, requests=requests, search_form=search_form)
+    return render_template('connections.html', form=form, usernames=people, requests=requests, suggestions=suggestions, search_form=search_form)
 
 @app.route('/connections/send_request/<username>', methods=['POST'])
 @login_required
