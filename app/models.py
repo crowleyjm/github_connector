@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     github = db.Column(db.String(64), index=True, unique=False)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Comment', backref='author', lazy='dynamic')
+    posts = db.relationship('Comment', backref='author', lazy='dynamic', cascade='all, delete')
     languages = db.Column(JSONB, default=None)
     repos = db.Column(JSONB, default=None)
     connected = db.relationship(
