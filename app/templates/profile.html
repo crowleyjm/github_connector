@@ -73,11 +73,13 @@
                         </a>
                     </li>
                 {% endif %}
-                    <li class="next{% if not next_url %} disabled{% endif %}">
+                    {% if next_url %}
+                    <li class="next disabled">
                         <a class="nav-item nav-link" href="{{ next_url or '#' }}"> Older posts <span
                                 aria-hidden="true"></span>
                         </a>
                     </li>
+                {% endif %}
                 </ul>
 
 
