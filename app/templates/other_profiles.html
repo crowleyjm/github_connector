@@ -24,6 +24,12 @@
             <div class="col-sm-5">
                 {% for post in posts %}
                     {% include '_post.html' %}
+                    {% if current_user.has_liked_post(post) %}
+                        <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}">Unlike</a>
+                    {% else %}
+                        <a href="{{ url_for('like_action', post_id=post.id, action='like') }}">Like</a>
+                    {% endif %}
+                    {{ post.likes.count() }} likes
                 {% endfor %}
                 <ul class="nav nav-pills justify-content-center">
                     <li class="previous{% if not prev_url %} disabled{% endif %}">
@@ -43,20 +49,20 @@
             <div class="col-sm-3">
                 <h4>Repositories</h4>
                 <br>
-            {% if user.repos == None %}
-            {% else %}
-                {% for key, value in user.repos.items() %}
-                    <form>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <a class="nav-item nav-link" href="{{ value }}">
-                                    <span aria-hidden="true"></span> {{ key }}
-                                </a>
-                            </li>
-                        </ul>
-                    </form>
-                {% endfor %}
-            {% endif %}
+                {% if user.repos == None %}
+                {% else %}
+                    {% for key, value in user.repos.items() %}
+                        <form>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="nav-item nav-link" href="{{ value }}">
+                                        <span aria-hidden="true"></span> {{ key }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </form>
+                    {% endfor %}
+                {% endif %}
 
             </div>
         </div>
