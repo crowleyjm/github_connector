@@ -163,7 +163,7 @@ class User(UserMixin, db.Model):
             connections, (connections.c.sender_id == Post.user_id)).filter(
             connections.c.recipient_id == self.id)
         own_posts = Post.query.filter_by(user_id=self.id)
-        return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Comment.date_posted.desc())
+        return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Post.date_posted.desc())
 
     def like_post(self, post):
         if not self.has_liked_post(post):
