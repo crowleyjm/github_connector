@@ -15,14 +15,15 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class Comment(db.Model):
-    __tablename__ = 'comments'
-
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(240), index=False, unique=False)
     date_posted = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                         nullable=False)
+
+    likes = db.relationship('PostLike', backref='post', lazy='dynamic')
+
 
     def get_user(self):
         return User.query.get(
@@ -60,7 +61,7 @@ class User(UserMixin, db.Model):
     github = db.Column(db.String(64), index=True, unique=False)
     password_hash = db.Column(db.String(128))
     authentication = db.Column(db.Boolean, default=False)
-    posts = db.relationship('Comment', backref='author', lazy='dynamic', cascade='all, delete')
+    posts = db.relationship('Post', backref='author', lazy='dynamic', cascade='all, delete')
     languages = db.Column(JSONB, default=None)
     repos = db.Column(JSONB, default=None)
     connected = db.relationship(
@@ -68,6 +69,10 @@ class User(UserMixin, db.Model):
         primaryjoin=(connections.c.sender_id == id),
         secondaryjoin=(connections.c.recipient_id == id),
         backref=db.backref('connections', lazy='dynamic'), lazy='dynamic')
+    liked = db.relationship(
+        'PostLike',
+        foreign_keys='PostLike.user_id',
+        backref='user', lazy='dynamic')
 
     def __init__(self, username, email):
         self.username = username
@@ -147,18 +152,38 @@ class User(UserMixin, db.Model):
             digest, size)
 
     def own_posts(self):
-        own = Comment.query.filter_by(user_id=self.id)
-        return own.order_by(Comment.date_posted.desc())
-
+        own = Post.query.filter_by(user_id=self.id)
+        return own.order_by(Post.date_posted.desc())
 
     def connected_posts(self):
-        connections_sent_posts = Comment.query.join(
-            connections, (connections.c.recipient_id == Comment.user_id)).filter(
-            connections.c.sender_id == self.id)
-        connections_received_posts = Comment.query.join(
-            connections, (connections.c.sender_id == Comment.user_id)).filter(
-            connections.c.recipient_id == self.id)
-        own_posts = Comment.query.filter_by(user_id=self.id)
-        return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Comment.date_posted.desc())
+        connections_sent_posts = Post.query.join(
+            connections, (connections.c.recipient_id == Post.user_id)).filter(
+            connections.c.sender_id == self.id, connections.c.are_connected == "true")
+        connections_received_posts = Post.query.join(
+            connections, (connections.c.sender_id == Post.user_id)).filter(
+            connections.c.recipient_id == self.id, connections.c.are_connected == "true")
+        own_posts = Post.query.filter_by(user_id=self.id)
+        return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Post.date_posted.desc())
+
+    def like_post(self, post):
+        if not self.has_liked_post(post):
+            like = PostLike(user_id=self.id, post_id=post.id)
+            db.session.add(like)
+
+    def unlike_post(self, post):
+        if self.has_liked_post(post):
+            PostLike.query.filter_by(
+                user_id=self.id,
+                post_id=post.id).delete()
+
+    def has_liked_post(self, post):
+        return PostLike.query.filter(
+            PostLike.user_id == self.id,
+            PostLike.post_id == post.id).count() > 0
 
 
+class PostLike(db.Model):
+    __tablename__ = 'post_like'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))

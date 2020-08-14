@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, CommentForm, ConnectionRequestForm, PostForm, ConnectionRemoveForm, SearchForm
-from app.models import User, Comment
+from app.models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from app.api import bp, github_blueprint
 from flask_dance.contrib.github import github
@@ -24,7 +24,7 @@ def delete_comment():
 
     comment_id = request.args.get("comment_id", 0, type=int)
 
-    comment = Comment.query.get(comment_id)
+    comment = Post.query.get(comment_id)
     if comment:
         db.session.delete(comment)
         db.session.commit()
@@ -42,12 +42,12 @@ def user_feed():
 
     if form.validate_on_submit():
         user_id = current_user.id
-        comment = Comment(message=form.message.data, user_id=user_id)
+        comment = Post(message=form.message.data, user_id=user_id)
         db.session.add(comment)
         db.session.commit()
 
     page = request.args.get('page', 1, type=int)
-    comments = Comment.query.order_by(Comment.date_posted.desc()).paginate(
+    comments = Post.query.order_by(Post.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False
     )
 
@@ -248,12 +248,12 @@ def about():
 def profile():
     form = PostForm()
     if form.validate_on_submit():
-        post = Comment(body=form.post.data, author=current_user)
+        post = Post(body=form.post.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('profile'))
     page = request.args.get('page', 1, type=int)
-    posts = current_user.connected_posts().order_by(Comment.date_posted.desc()).paginate(
+    posts = current_user.connected_posts().order_by(Post.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('profile', page=posts.next_num) \
         if posts.has_next else None
@@ -299,7 +299,7 @@ def other_profile(username):
 
     req_user = User.query.filter_by(username=username).first_or_404()
 
-    posts = req_user.own_posts().order_by(Comment.date_posted.desc()).paginate(
+    posts = req_user.own_posts().order_by(Post.date_posted.desc()).paginate(
         page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('other_profile', page=posts.next_num) \
         if posts.has_next else None
@@ -310,6 +310,18 @@ def other_profile(username):
     return render_template('other_profiles.html', title="Profile Page",
                            posts=posts.items, next_url=next_url,
                            prev_url=prev_url, user=req_user, form=form)
+
+@app.route('/like/<int:post_id>/<action>')
+@login_required
+def like_action(post_id, action):
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if action == 'like':
+        current_user.like_post(post)
+        db.session.commit()
+    if action == 'unlike':
+        current_user.unlike_post(post)
+        db.session.commit()
+    return redirect(request.referrer)
 
 
 
