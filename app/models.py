@@ -158,10 +158,10 @@ class User(UserMixin, db.Model):
     def connected_posts(self):
         connections_sent_posts = Post.query.join(
             connections, (connections.c.recipient_id == Post.user_id)).filter(
-            connections.c.sender_id == self.id)
+            connections.c.sender_id == self.id, connections.c.are_connected == "true")
         connections_received_posts = Post.query.join(
             connections, (connections.c.sender_id == Post.user_id)).filter(
-            connections.c.recipient_id == self.id)
+            connections.c.recipient_id == self.id, connections.c.are_connected == "true")
         own_posts = Post.query.filter_by(user_id=self.id)
         return connections_sent_posts.union(own_posts).union(connections_received_posts).order_by(Post.date_posted.desc())
 
